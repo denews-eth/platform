@@ -1,4 +1,4 @@
-# denews-client
+# denews-platform
 
 ## Project setup
 ```
