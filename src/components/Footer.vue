@@ -2,7 +2,7 @@
 <footer class="footer mt-5">
 		<div class="container">
 			<div class="row">
-				<div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 order-4 order-md-1 order-lg-4 order-xl-1">
+				<div class="col-12 col-md-3 col-lg-4 col-xl-5 order-4 order-md-1 order-lg-4 order-xl-1">
 					<div class="footer__logo">
 						<img src="img/logo.svg" alt="">
 					</div> 
@@ -22,23 +22,23 @@
 					</div>
 				</div>
 
-				<div class="col-6 col-md-4 col-lg-3 col-xl-2 order-1 order-md-2 order-lg-1 order-xl-2 offset-md-2 offset-lg-0">
+				<div class="col-6 col-md-3 col-lg-3 col-xl-3 order-1 order-md-1 order-lg-4 order-xl-1">
 					<h6 class="footer__title">NTF Marketplace</h6>
 					<div class="footer__nav">
-						<a href="explore.html">Explore</a>
-						<a href="activity.html">Activity</a>
-						<a href="authors.html">Authors</a>
-						<a href="privacy.html">Privacy Policy</a>
+						<a href="/">Home</a>
+						<a href="/explore">Explore</a>
+						<a href="/authors">Authors</a>
+						<a href="/privacy-policy">Privacy Policy</a>
 					</div>
 				</div>
 
-				<div class="col-12 col-md-8 col-lg-6 col-xl-4 order-3 order-lg-2 order-md-3 order-xl-3">
+				<div class="col-6 col-md-3 col-lg-2 col-xl-2 order-1 order-md-1 order-lg-4 order-xl-1">
 					<div class="row">
 						<div class="col-12">
 							<h6 class="footer__title">Explore</h6>
 						</div>
 
-						<div class="col-6">
+						<div class="col-4">
 							<div class="footer__nav">
 								<a href="#">Art</a>
 								<a href="#">Photography</a>
@@ -46,25 +46,16 @@
 								<a href="#">Music</a>
 							</div>
 						</div>
-
-						<div class="col-6">
-							<div class="footer__nav">
-								<a href="#">Domains</a>
-								<a href="#">DeFi</a>
-								<a href="#">Metaverses</a>
-								<a href="#">Memes</a>
-							</div>
-						</div>
 					</div>
 				</div>
 
-				<div class="col-6 col-md-4 col-lg-3 col-xl-2 order-2 order-lg-3 order-md-4 order-xl-4">
+				<div class="col-6 col-md-3 col-lg-3 col-xl-2 order-1 order-md-1 order-lg-4 order-xl-1">
 					<h6 class="footer__title">Community</h6>
 					<div class="footer__nav">
-						<a href="token.html">Unitok</a>
-						<a href="blog.html">Our Blog</a>
-						<a href="faq.html">Help Center</a>
-						<a href="contacts.html">Contacts</a>
+						<a href="/how-does-it-work">How does it work?</a>
+						<a href="/explore">Our Blog</a>
+						<a href="/help-center">Help Center</a>
+						<a href="/contacts">Contacts</a>
 					</div>
 				</div>
 			</div>

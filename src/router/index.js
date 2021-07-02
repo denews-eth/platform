@@ -9,6 +9,7 @@ import AboutUs from '../views/AboutUs.vue'
 import Create from '../views/Create.vue'
 import HelpCenter from '../views/HelpCenter.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 
 const routes = [
   {
@@ -61,7 +62,9 @@ const routes = [
     name: 'PrivacyPolicy',
     component: PrivacyPolicy
   },
-  
+  { path: '/login/:token', redirect: { name: 'Home' }},
+  { path: "/:catchAll(.*)", component: PageNotFound }
+
   // {
   //   path: '/about',
   //   name: 'About',
