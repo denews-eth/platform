@@ -24,103 +24,21 @@
       <div class="header__menu">
         <ul class="header__nav">
           <li class="header__nav-item">
-            <a class="header__nav-link" href="#" role="button" id="dropdownMenuHome" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">Home <svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                  d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z">
-                </path>
-              </svg></a>
-
-            <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenuHome" style="">
-              <li><a href="index.html">Home style 1</a></li>
-              <li><a href="index2.html">Home style 2</a></li>
-              <li><a href="/">Home style 3</a></li>
-            </ul>
+            <a class="header__nav-link" href="/" role="button">Home
+            </a>
           </li>
           <li class="header__nav-item">
-            <a class="header__nav-link" href="#" role="button" id="dropdownMenu" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">Explore <svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                  d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z">
-                </path>
-              </svg></a>
-
-            <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenu" style="">
-              <li><a href="explore.html">Explore style 1</a></li>
-              <li><a href="explore2.html">Explore style 2</a></li>
-              <li><a href="explore3.html">Explore style 3</a></li>
-              <li><a href="item.html">Item style 1</a></li>
-              <li><a href="item2.html">Item style 2</a></li>
-            </ul>
+            <a class="header__nav-link" href="/explore" role="button">Explore
+            </a>
           </li>
           <li class="header__nav-item">
-            <a href="activity.html" class="header__nav-link">Activity</a>
+            <a class="header__nav-link" href="/authors" role="button">Authors
+            </a>
           </li>
           <li class="header__nav-item">
-            <a class="header__nav-link" href="#" role="button" id="dropdownMenu0" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">Community <svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                  d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z">
-                </path>
-              </svg></a>
-
-            <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenu0">
-              <li><a href="token.html">Unitok</a></li>
-              <li class="dropdown-submenu">
-                <a class="dropdown-item" href="#" role="button" id="dropdownMenuSub" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">Blog <svg xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24">
-                    <path
-                      d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z">
-                    </path>
-                  </svg></a>
-
-                <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenuSub">
-                  <li><a href="blog.html">Blog style 1</a></li>
-                  <li><a href="blog2.html">Blog style 2</a></li>
-                  <li><a href="article.html">Article</a></li>
-                </ul>
-              </li>
-              <li><a href="faq.html">Help center</a></li>
-              <li><a href="contacts.html">Contacts</a></li>
-            </ul>
-          </li>
-          <li class="header__nav-item">
-            <a class="header__nav-link" href="#" role="button" id="dropdownMenu1" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">Pages <svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                  d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z">
-                </path>
-              </svg></a>
-
-            <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenu1">
-              <li><a href="authors">Authors</a></li>
-              <li><a href="author.html">Author</a></li>
-              <li><a href="collection.html">Collection</a></li>
-              <li><a href="create.html">Create</a></li>
-            </ul>
-          </li>
-          <li class="header__nav-item">
-            <a class="header__nav-link header__nav-link--menu" href="#" role="button" id="dropdownMenu2"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                  d="M12,10a2,2,0,1,0,2,2A2,2,0,0,0,12,10ZM5,10a2,2,0,1,0,2,2A2,2,0,0,0,5,10Zm14,0a2,2,0,1,0,2,2A2,2,0,0,0,19,10Z">
-                </path>
-              </svg></a>
-
-            <ul class="dropdown-menu header__nav-menu" aria-labelledby="dropdownMenu2">
-              <li><a href="signin.html">Sign in</a></li>
-              <li><a href="signup.html">Sign up</a></li>
-              <li><a href="forgot.html">Forgot password</a></li>
-              <li><a href="404.html">404 Page</a></li>
-              <li><a href="privacy.html">Privacy policy</a></li>
-            </ul>
-          </li>
+            <a class="header__nav-link" href="/how-does-it-work" role="button">How does it work?
+            </a>
+          </li>      
         </ul>
       </div>
 

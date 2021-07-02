@@ -1,5 +1,4 @@
 <template>
-<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
   <!-- card -->
   <div class="card">
     <a href="item.html" class="card__cover">
@@ -13,7 +12,7 @@
         <span class="card__clock card__clock--2">07:28:34</span>
       </span>
     </a>
-    <h3 class="card__title"><a href="item.html">Walking on Air</a></h3>
+    <h3 class="card__title"><a :href="link">Walking on Air</a></h3>
     <div class="card__author">
       <img src="img/avatars/avatar.jpg" alt="">
       <a href="author.html">@nickname</a>
@@ -35,11 +34,11 @@
     </div>
   </div>
   <!-- end card -->
-</div>
 </template>
 
 <script>
   export default {
     name: "ArticlePreview",
+    props: ['link']
   }
 </script>

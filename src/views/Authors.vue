@@ -1,22 +1,8 @@
 <template>
 <div class="container">
 	<div class="row row--grid">
-		<!-- breadcrumb -->
-		<div class="col-12">
-			<ul class="breadcrumb">
-				<li class="breadcrumb__item"><a href="index.html">Home</a></li>
-				<li class="breadcrumb__item breadcrumb__item--active">Authors</li>
-			</ul>
-		</div>
-		<!-- end breadcrumb -->
 
-		<!-- title -->
-		<div class="col-12">
-			<div class="main__title main__title--page">
-				<h1>Authors</h1>
-			</div>
-		</div>
-		<!-- end title -->
+		<Breadcrumb></Breadcrumb>
 
 		<!-- filter -->
 		<div class="col-12">
@@ -61,9 +47,18 @@
 			</div>
 		</div>
 		<!-- end filter -->
+
+		<!-- title -->
+		<div class="col-12">
+			<div class="main__title main__title--page">
+				<h1>Authors</h1>
+			</div>
+		</div>
+		<!-- end title -->
+
 	</div>
 	<div class="row row--grid">
-		<Author v-for="i in 8" :key="i"></Author>
+		<AuthorPreview v-for="i in 8" :key="i" :link="'/author'"></AuthorPreview>
 	</div>
 
 
@@ -74,13 +69,15 @@
 <script>
 // @ is an alias to /src
 import Paginator from '@/components/Paginator.vue'
-import Author from '@/components/Author.vue'
+import AuthorPreview from '@/components/AuthorPreview.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
 export default {
   name: 'Home',
   components: {
+		Breadcrumb,
     Paginator,
-		Author
+		AuthorPreview,
   }
 }
 </script>
