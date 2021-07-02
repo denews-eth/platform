@@ -20,37 +20,85 @@
   </div>
 
   <div class="filter__group">
-    <label class="filter__label">Category:</label>
-    <ul class="filter__checkboxes">
-      <li>
-        <input id="type5" type="checkbox" name="type5" checked="">
-        <label for="type5">Art</label>
+    <label class="filter__label" style="margin-bottom:0">Category:</label>
+    <ul>
+      <li style="margin-top: 15px;">
+        <label class="filter__label" style="text-transform:uppercase">Crypto</label>
+        <ul class="filter__checkboxes" style="margin-left:15px">
+          <li>
+            <input id="type5" type="checkbox" name="type5" checked="">
+            <label for="type5">All News</label>
+          </li>
+          <li>
+            <input id="type6" type="checkbox" name="type6">
+            <label for="type6">Business</label>
+          </li>
+          <li>
+            <input id="type7" type="checkbox" name="type7" checked="">
+            <label for="type7">Technology</label>
+          </li>
+          <li>
+            <input id="type8" type="checkbox" name="type8" checked="">
+            <label for="type8">Coin</label>
+          </li>
+          <li>
+            <input id="type9" type="checkbox" name="type9">
+            <label for="type9">Bitcoin</label>
+          </li>
+          <li>
+            <input id="type10" type="checkbox" name="type10">
+            <label for="type10">Ethereum</label>
+          </li>
+          <li>
+            <input id="type11" type="checkbox" name="type11">
+            <label for="type11">NFTs</label>
+          </li>
+          <li>
+            <input id="type11" type="checkbox" name="type11">
+            <label for="type11">Market</label>
+          </li>
+          <li>
+            <input id="type11" type="checkbox" name="type11">
+            <label for="type11">People</label>
+          </li>
+          <li>
+            <input id="type11" type="checkbox" name="type11">
+            <label for="type11">Community</label>
+          </li>
+          <li>
+            <input id="type11" type="checkbox" name="type11">
+            <label for="type11">Policy & Regulation</label>
+          </li>
+        </ul>
       </li>
-      <li>
-        <input id="type6" type="checkbox" name="type6">
-        <label for="type6">Photography</label>
+      <li style="margin-top: 15px;">
+        <label class="filter__label" style="text-transform:uppercase">Blockchain</label>
+        <ul class="filter__checkboxes" style="margin-left:15px">
+          <li>
+            <input id="type5" type="checkbox" name="type5" checked="">
+            <label for="type5">Bitcoin</label>
+          </li>
+          <li>
+            <input id="type6" type="checkbox" name="type6">
+            <label for="type6">Ethereum</label>
+          </li>
+          <li>
+            <input id="type7" type="checkbox" name="type7" checked="">
+            <label for="type7">Polygon</label>
+          </li>
+        </ul>
       </li>
-      <li>
-        <input id="type7" type="checkbox" name="type7" checked="">
-        <label for="type7">Games</label>
-      </li>
-      <li>
-        <input id="type8" type="checkbox" name="type8" checked="">
-        <label for="type8">Metaverses</label>
-      </li>
-      <li>
-        <input id="type9" type="checkbox" name="type9">
-        <label for="type9">Music</label>
-      </li>
-      <li>
-        <input id="type10" type="checkbox" name="type10">
-        <label for="type10">Domains</label>
-      </li>
-      <li>
-        <input id="type11" type="checkbox" name="type11">
-        <label for="type11">Memes</label>
+      <li style="margin-top: 15px;">
+        <label class="filter__label" style="text-transform:uppercase">Law</label>
+        <ul class="filter__checkboxes" style="margin-left:15px">
+          <li>
+            <input id="type5" type="checkbox" name="type5" checked="">
+            <label for="type5">...</label>
+          </li>
+        </ul>
       </li>
     </ul>
+    
   </div>
 
   <div class="filter__group">
@@ -58,6 +106,7 @@
   </div>
 </div>
 </template>
+
 
 <script>
 export default {

@@ -3,9 +3,12 @@ import Home from '../views/Home.vue'
 import Authors from '../views/Authors.vue'
 import Author from '../views/Author.vue'
 import Article from '../views/Article.vue'
+import Contacts from '../views/Contacts.vue'
 import Explore from '../views/Explore.vue'
 import AboutUs from '../views/AboutUs.vue'
 import Create from '../views/Create.vue'
+import HelpCenter from '../views/HelpCenter.vue'
+import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 
 const routes = [
   {
@@ -34,14 +37,29 @@ const routes = [
     component: Explore
   },
   {
+    path: '/contacts',
+    name: 'Contacts',
+    component: Contacts
+  },
+  {
     path: '/how-does-it-work',
     name: 'AboutUs',
     component: AboutUs
   },
   {
+    path: '/help-center',
+    name: 'HelpCenter',
+    component: HelpCenter
+  },
+  {
     path: '/create',
     name: 'Create',
     component: Create
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: PrivacyPolicy
   },
   
   // {

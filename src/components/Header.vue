@@ -38,7 +38,19 @@
           <li class="header__nav-item">
             <a class="header__nav-link" href="/how-does-it-work" role="button">How does it work?
             </a>
-          </li>      
+          </li>    
+          <li class="header__nav-item">
+            <a class="header__nav-link" href="/help-center" role="button">Help center
+            </a>
+          </li>    
+          <li class="header__nav-item">
+            <a class="header__nav-link" href="/contacts" role="button">Contacts
+            </a>
+          </li> 
+          <li class="header__nav-item">
+            <a class="header__nav-link" href="/privacy-policy" role="button">Privacy Policy
+            </a>
+          </li> 
         </ul>
       </div>
 

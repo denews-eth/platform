@@ -43,24 +43,11 @@
 
 						<div class="tab-pane fade" id="tab-3" role="tabpanel">
 							<div class="row">
-								<!-- sidebar -->
-								<div class="col-12 col-xl-4 order-xl-2">
-									<div class="filter-wrap">
-										<button class="filter-wrap__btn" type="button" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">Open filter</button>
-
-										<div class="collapse filter-wrap__content" id="collapseFilter">
-											<!-- filter -->
-											<Filter></Filter>
-											<!-- end filter -->
-										</div>
-									</div>
-								</div>
-								<!-- end sidebar -->
 
 								<!-- content -->
-								<div class="col-12 col-xl-8 order-xl-1">
+								<div class="col-12">
 									<div class="row row--grid">
-										<div class="col-12 col-lg-6 col-xl-12">
+										<div class="col-12">
                       <Activity></Activity>
 										</div>
 									</div>
@@ -185,7 +172,6 @@ import AuthorDetails from '@/components/AuthorDetails.vue'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import Paginator from '@/components/Paginator.vue'
 import Activity from '@/components/Activity.vue'
-import Filter from '@/components/Filter.vue'
 
 export default {
   name:"Author",
@@ -193,8 +179,7 @@ export default {
     AuthorDetails,
     ArticlePreview,
     Paginator,
-    Activity,
-    Filter
+    Activity
   },
 }
 </script>
