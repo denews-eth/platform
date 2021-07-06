@@ -1,13 +1,12 @@
 <template>
   <div class="author author--page">
-    <div class="author__meta">
+    <div class="author__meta" v-if="verified">
       <a href="author.html" class="author__avatar author__avatar--verified">
-        <img src="img/avatars/avatar5.jpg" alt="">
+        <img :src="user.profile_image_url" alt="Profile image">
       </a>
-      <h1 class="author__name"><a href="author.html">Lily Rose</a></h1>
-      <h2 class="author__nickname"><a href="author.html">@l1rose</a></h2>
-      <p class="author__text">All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as
-        necessary</p>
+      <h1 class="author__name"><a href="author.html">{{user.name}} {{user.surname}}</a></h1>
+      <h2 class="author__nickname"><a href="author.html">@{{user.screen_name}}</a></h2>
+      <p class="author__text">{{user.description}}</p>
       <div class="author__code">
         <input type="text" value="XAVUW3sw3ZunitokcLtemEfX3tGuX2plateWdh" id="author-code">
         <button type="button">
@@ -57,11 +56,30 @@
         <button class="author__follow" type="button">Follow</button>
       </div>
     </div>
+    <div class="author__meta" v-if="!verified">
+      <a href="author.html" class="author__avatar author__avatar--verified">
+        <img src="img/avatars/avatar5.jpg" alt="">
+      </a>
+      <h1 class="author__name" style="overflow: hidden;text-overflow: ellipsis;"><a href="/author">{{account}}</a></h1>
+      <h2 class="author__nickname"><a href="author.html"></a></h2>
+      <p class="author__text">
+        <a class="author__follow" type="button" style="width:100%!important" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name:"Author"
+  name:"Author",
+  data() {
+    return {
+      
+    }
+  },
+  props: ['verified', 'account', 'user'],
+  mounted() {
+    console.log(this.account)
+  }
 }
 </script>

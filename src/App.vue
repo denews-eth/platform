@@ -71,6 +71,7 @@ export default {
     async disconnect() {
       const app = this;
       localStorage.removeItem("connected");
+      localStorage.removeItem("oauth_token")
       app.account = "";
       app.balance = 0;
       location.reload();
@@ -113,6 +114,8 @@ export default {
         }
       }
     }
+
+    
   },
 };
 </script>

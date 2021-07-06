@@ -10,17 +10,19 @@ import Create from '../views/Create.vue'
 import HelpCenter from '../views/HelpCenter.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import PageNotFound from '../views/PageNotFound.vue'
+import Verify from '../views/Verify.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    props:true
   },
   {
     path: '/article',
     name: 'Article',
-    component: Article
+    component: Article,
   },
   {
     path: '/authors',
@@ -30,7 +32,8 @@ const routes = [
   {
     path: '/author',
     name: 'Author',
-    component: Author
+    component: Author,
+    props:true
   },
   {
     path: '/explore',
@@ -58,11 +61,17 @@ const routes = [
     component: Create
   },
   {
+    path: '/verify',
+    name: 'Verify',
+    component: Verify,
+    props: true
+  },
+  {
     path: '/privacy-policy',
     name: 'PrivacyPolicy',
     component: PrivacyPolicy
   },
-  { path: '/login/:token', redirect: { name: 'Home' }},
+  { path: '/login/:oauth_token', redirect: { name: 'Verify' }},
   { path: "/:catchAll(.*)", component: PageNotFound }
 
   // {

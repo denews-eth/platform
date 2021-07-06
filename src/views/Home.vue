@@ -69,6 +69,7 @@ export default {
     Carousel,
     ArticlePreview,
     Paginator
-  }
+  },
+  props:['oauth_token'],
 }
 </script>
