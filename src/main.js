@@ -11,6 +11,4 @@ import './assets/css/magnific-popup.css';
 import './assets/css/select2.min.css';
 import './assets/css/main.css';
 
-
-
 createApp(App).use(router).mount('#app')
