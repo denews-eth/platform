@@ -107,6 +107,16 @@ import AuthorDetails from '../components/AuthorDetails.vue'
 
 export default {
   components: { AuthorDetails },
-  name:"Create"
+  name:"Create",
+	data() {
+		return {
+			
+		}
+	},
+	mounted() {
+		if(localStorage.getItem('verified') === "false" || localStorage.getItem('verified') === null) {
+			location.href = "/"
+		}
+	}
 }
 </script>

@@ -8,12 +8,18 @@
     <div class="container">
       <div class="row row--grid">
         <div class="col-12 col-xl-3">
-          <AuthorDetails :verified="verified" :account="account" :user="user"></AuthorDetails>
+          <AuthorDetails :twitter="twitter" :account="account" :user="user"></AuthorDetails>
         </div>
 
         <div class="col-12 col-xl-9">
           <!-- Profile verified -->
-          <div class="profile" v-if="verified">
+          <div class="profile p-3" v-if="!verified">
+            <div class="row justify-content-center">
+              <p class="mt-2 mr-3" style="color:#dedede">Profilo non verificato!</p>
+              <a class="author__follow" style="background:#9e550b" href="/verify">Verifica</a>
+            </div>
+          </div>
+          <div class="profile" v-if="twitter">
             <!-- tabs nav -->
             <ul
               class="nav nav-tabs profile__tabs"
@@ -60,7 +66,7 @@
           </div>
 
           <!-- Profile NOT verified-->
-          <div class="profile" v-if="!verified" id="ProfileNotVerified">
+          <div class="profile" v-if="!twitter" id="ProfileNotVerified">
             <!-- tabs nav -->
             <ul
               class="nav nav-tabs profile__tabs"
@@ -107,7 +113,7 @@
           </div>
 
           <!-- content tabs -->
-          <div class="tab-content" v-if="verified">
+          <div class="tab-content" v-if="twitter">
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4">
@@ -147,7 +153,7 @@
               </div>
             </div>
           </div>
-          <div class="tab-content row flex-column" v-if="!verified">
+          <div class="tab-content row flex-column" v-if="!twitter">
             <div class="mx-auto">
               <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
               <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
@@ -180,6 +186,7 @@ export default {
     return {
       account: "",
       verified: false,
+      twitter: false,
       user: {}
     };
   },
@@ -195,16 +202,16 @@ export default {
       if(localStorage.oauth_token === undefined || localStorage.oauth_token === "") {
         if(this.oauth_token != undefined) {
           localStorage.oauth_token = this.oauth_token
-          this.verified = true
+          this.twitter = true
           let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
           this.user = res.data.user
         }
-        else this.verified = false
+        else this.twitter = false
       }
       else {
         let res = await axios.post('/twitter/validate', {oauth_token: localStorage.oauth_token})
         this.user = res.data.user
-        this.verified = true
+        this.twitter = true
       }
     }
   },
@@ -215,6 +222,9 @@ export default {
       app.account = connected;
     } else {
       window.location.href = "/";
+    }
+    if(localStorage.verified === "true") {
+      this.verified = true
     }
     await this.twitterLogin()
     

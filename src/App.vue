@@ -26,6 +26,8 @@ import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import Web3 from "web3";
 
+import axios from 'axios'
+
 export default {
   components: {
     Header,
@@ -38,6 +40,7 @@ export default {
       balance: 0,
       selected_network: 137,
       selected_ticker: "MATIC",
+      user: {}
     };
   },
   methods: {
@@ -114,7 +117,25 @@ export default {
         }
       }
     }
-
+    //Verify profile
+    if(localStorage.getItem('oauth_token') !== null) {
+      if(localStorage.getItem('verified') === null) {
+        let res = await axios.post('/twitter/validate', {
+          oauth_token: localStorage.getItem('oauth_token'),
+          address: localStorage.getItem('connected')
+          })
+        if(res.data.error == true) {return;}
+        else {
+          this.user = res.data.user
+          if(this.user.birth_date === null || this.user.name === null || this.user.surname === null || this.user.email === null || this.user.description === null || this.user.description === null || this.user.codice_fiscale === null || this.user.linkedin_profile_url === null) {
+            localStorage.setItem('verified', "false")
+          }
+          else {
+            localStorage.setItem('verified', "true")
+          }
+        }
+      }
+    }
     
   },
 };

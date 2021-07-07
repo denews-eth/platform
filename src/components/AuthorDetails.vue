@@ -1,6 +1,6 @@
 <template>
   <div class="author author--page">
-    <div class="author__meta" v-if="verified">
+    <div class="author__meta" v-if="twitter">
       <a href="author.html" class="author__avatar author__avatar--verified">
         <img :src="user.profile_image_url" alt="Profile image">
       </a>
@@ -56,7 +56,7 @@
         <button class="author__follow" type="button">Follow</button>
       </div>
     </div>
-    <div class="author__meta" v-if="!verified">
+    <div class="author__meta" v-if="!twitter">
       <a href="author.html" class="author__avatar author__avatar--verified">
         <img src="img/avatars/avatar5.jpg" alt="">
       </a>
@@ -77,7 +77,7 @@ export default {
       
     }
   },
-  props: ['verified', 'account', 'user'],
+  props: ['twitter', 'account', 'user'],
   mounted() {
     console.log(this.account)
   }

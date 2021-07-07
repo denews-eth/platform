@@ -37,8 +37,8 @@
           </ul>
         </div>
         <!-- end tabs nav -->
-        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" v-for="i in 18" :key="i">
-          <ArticlePreview :link="'/article'"></ArticlePreview>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" v-for="article in articles" :key="article._id">
+          <ArticlePreview :article="article"></ArticlePreview>
         </div>
 
         <div class="col-12">
@@ -63,6 +63,8 @@ import Carousel from '@/components/Carousel.vue'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import Paginator from '@/components/Paginator.vue'
 
+import axios from 'axios'
+
 export default {
   name: 'Home',
   components: {
@@ -71,5 +73,20 @@ export default {
     Paginator
   },
   props:['oauth_token'],
+  data() {
+    return {
+      articles: []
+    }
+  },
+  methods: {
+    async getArticles() {
+      let res = await axios.get('/articles')
+      if(res.data.error == true) {return}
+      else this.articles = res.data
+    }
+  },
+  async mounted() {
+    this.getArticles()
+  }
 }
 </script>

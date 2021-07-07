@@ -15,35 +15,54 @@
 
     <div class="row row--grid">
       <div class="col-12 col-lg-10 col-xl-9 mx-auto">
-        <form action="#" class="sign__form sign__form--contacts">
+        <form class="sign__form sign__form--contacts" @submit.prevent="editProfile()">
           <div class="row">
             <div class="col-12 col-md-6">
               <div class="sign__group">
-                <input type="text" name="name" class="sign__input" placeholder="Name" v-model="user.name">
+                <input type="text" name="name" class="sign__input" :style="(errors.name) ? 'border-color:#bd251a;' : ''" placeholder="Name" v-model="user.name">
+                <p style="color:#ce312b;" v-if="errors.name">The name is required</p>
               </div>
             </div>
 
             <div class="col-12 col-md-6">
               <div class="sign__group">
-                <input type="text" name="surname" class="sign__input" placeholder="Last Name" v-model="user.surname">
+                <input type="text" name="surname" class="sign__input" :style="(errors.surname) ? 'border-color:#bd251a;' : ''" placeholder="Last Name" v-model="user.surname">
+                <p style="color:#ce312b;" v-if="errors.surname">The surname is required</p>
               </div>
             </div>
 
             <div class="col-12 col-md-7">
               <div class="sign__group">
-                <input type="text" name="email" class="sign__input" placeholder="Email" v-model="user.email">
+                <input type="text" name="email" class="sign__input" :style="(errors.email) ? 'border-color:#bd251a;' : ''" placeholder="Email" v-model="user.email">
+                <p style="color:#ce312b;" v-if="errors.email">The email is required</p>
               </div>
             </div>
 
             <div class="col-12 col-md-5">
               <div class="sign__group">
-                <input type="date" name="birth_date" class="sign__input" placeholder="Birth Date" v-model="user.birth_date">
+                <input type="date" name="birth_date" class="sign__input" :style="(errors.birth_date) ? 'border-color:#bd251a;' : ''" placeholder="Birth Date" v-model="user.birth_date">
+                <p style="color:#ce312b;" v-if="errors.birth_date">The birth date is required</p>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-5">
+              <div class="sign__group">
+                <input type="text" name="linkedin_profile_url" class="sign__input" :style="(errors.linkedin_profile_url) ? 'border-color:#bd251a;' : ''" placeholder="Linkedin profile Link" v-model="user.linkedin_profile_url">
+                <p style="color:#ce312b;" v-if="errors.linkedin_profile_url">The Linkedin profile link is required</p>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-7">
+              <div class="sign__group">
+                <input type="text" name="codice_fiscale" class="sign__input" :style="(errors.codice_fiscale) ? 'border-color:#bd251a;' : ''" placeholder="Codice fiscale" v-model="user.codice_fiscale">
+                <p style="color:#ce312b;" v-if="errors.codice_fiscale">The Codice fiscale is required</p>
               </div>
             </div>
 
             <div class="col-12">
               <div class="sign__group">
-                <textarea name="description" class="sign__textarea" placeholder="Your Bio" v-model="user.description"></textarea>
+                <textarea name="description" class="sign__textarea" :style="(errors.description) ? 'border-color:#bd251a;' : ''" placeholder="Your Bio" v-model="user.description"></textarea>
+                <p style="color:#ce312b;" v-if="errors.description">The description is required</p>
               </div>
             </div>
 
@@ -65,6 +84,14 @@
 </main>
 </template>
 <style lang="css" scoped>
+
+::-moz-calendar-picker-indicator {
+    filter: invert(1);
+}
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
   .fadeCheck {
     margin: 20px 10px!important;
     opacity: 1!important;
@@ -88,16 +115,22 @@ export default {
       account: "",
       auth_token: "",
       editSuccess: false,
-      loading: false
+      loading: false,
+      errors: {
+        name:false,
+        surname:false,
+        email:false,
+        birth_date:false,
+        description:false,
+        codice_fiscale: false,
+        linkedin_profile_url: false
+      }
     }
   },
   props: ['oauth_token'],
   methods: {
     async twitterLogin() {
       const app = this
-      if(localStorage.profileVerified !== undefined) {
-          location.href = '/'
-      }
       if(localStorage.oauth_token === undefined || localStorage.oauth_token === "") {
         if(app.oauth_token !== undefined) {
           localStorage.oauth_token = app.oauth_token
@@ -113,7 +146,37 @@ export default {
       }
     },
     async editProfile() {
-      console.log(0.5)
+      if(!this.user.name || this.user.name == "") {
+        this.errors.name = true
+      }else this.errors.name = false
+
+      if(!this.user.surname || this.user.surname == "") {
+        this.errors.surname = true
+      }else this.errors.surname = false
+
+      if(!this.user.email || this.user.email == "") {
+        this.errors.email = true
+      }else this.errors.email = false
+
+      if(!this.user.birth_date || this.user.birth_date == "") {
+        this.errors.birth_date = true
+      }else this.errors.birth_date = false
+
+      if(!this.user.linkedin_profile_url || this.user.linkedin_profile_url == "") {
+        this.errors.linkedin_profile_url = true
+      }else this.errors.linkedin_profile_url = false
+
+      if(!this.user.codice_fiscale || this.user.codice_fiscale == "") {
+        this.errors.codice_fiscale = true
+      }else this.errors.codice_fiscale = false 
+
+      if(!this.user.description || this.user.description == "") {
+        this.errors.description = true
+      }else this.errors.decription = false
+
+      if(!this.user.name || this.user.name == "" || !this.user.surname || this.user.surname == "" || !this.user.email || this.user.email == "" || !this.user.birth_date || this.user.birth_date == "" || !this.user.description || this.user.description == "" || !this.user.codice_fiscale || this.user.codice_fiscale == "" || !this.user.linkedin_profile_url || this.user.linkedin_profile_url == "") {
+        return
+      }
       this.loading = true
       this.$refs.editBtn.setAttribute('disabled', 'disabled')
       let res = await axios.post('/users/edit', {
@@ -122,12 +185,12 @@ export default {
         name: this.user.name,
         description: this.user.description,
         birth_date: this.user.birth_date,
+        linkedin_profile_url: this.user.linkedin_profile_url,
+        codice_fiscale: this.user.codice_fiscale,
         surname: this.user.surname,
         email: this.user.email
       })
-      console.log(1)
       if(res.data.error == true) {
-        console.log(2)
         this.loading = false
         this.$refs.editBtn.removeAttribute('disabled')
         this.editSuccess = false
@@ -135,11 +198,12 @@ export default {
         return
       }
       else {
-        console.log(3)
         this.loading = false
         this.$refs.editBtn.removeAttribute('disabled')
         this.editSuccess = true
+        localStorage.setItem('verified', "true")
         setTimeout(() => {this.$refs.check.classList.add('fadeCheck')}, 200)
+        setTimeout(() => {location.href = '/'}, 2000)
       }
     },
   },
@@ -148,8 +212,11 @@ export default {
 
     if ( connected !== null) {
       this.account = connected;
+      if(localStorage.getItem('verified') === "true") {
+            location.href = '/'
+      }
     } else {
-      window.location.href = "/";
+      location.href = "/";
     }
 
     await this.twitterLogin()
