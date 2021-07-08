@@ -3,7 +3,7 @@
     <div class="article">
       <!-- article content -->
       <div class="article__content">
-        <img src="img/posts/article.jpg" alt="">
+        <img src="/img/posts/article.jpg" alt="">
 
         <div class="article__meta">
           <a href="#" class="article__category">Documentary</a>

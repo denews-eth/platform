@@ -2,8 +2,7 @@
 	<!-- breadcrumb -->
 	<div class="col-12">
 		<ul class="breadcrumb">
-			<li class="breadcrumb__item"><a href="/">Home</a></li>
-			<li class="breadcrumb__item breadcrumb__item--active">Authors</li>
+			<li :class="(link.active) ? 'breadcrumb__item breadcrumb__item--active' : 'breadcrumb__item'" v-for="link in links" :key="link.link"><a :href="link.link" v-html="link.name"></a></li>
 		</ul>
 	</div>
 	<!-- end breadcrumb -->
@@ -11,6 +10,7 @@
 
 <script>
 export default {
-  name: "Breadcrumb"
+  name: "Breadcrumb",
+	props: ['links']
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <!-- card -->
   <div class="card">
-    <a href="item.html" class="card__cover">
+    <a class="card__cover" :href="'/article/'+article._id">
       <img :src="article.item_details.preview_img" alt="">
       <span class="card__time card__time--clock">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@
         <span class="card__clock card__clock--2">07:28:34</span>
       </span>
     </a>
-    <h3 class="card__title"><a v-html="article.item_details.name"></a></h3>
+    <h3 class="card__title"><a v-html="article.item_details.name" :href="'/article/'+article._id"></a></h3>
     <div class="card__author">
       <img :src="article.author_img" alt="">
       <a href="author.html" v-html="'@'+article.author"></a>
