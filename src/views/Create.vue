@@ -110,7 +110,7 @@
 							</div>
 
 							<div class="col-12 col-xl-3">
-								<button type="button" class="sign__btn" @click="createArticle()">Create item</button>
+								<button type="button" class="sign__btn" @click="createArticle()">Create item <i class="fa fa-spinner ml-2" v-if="loading"></i> </button>
 							</div>
 						</div>
 					</form>
@@ -129,11 +129,22 @@
 		border-radius:4px;
 		background: #1a181f;
 	}
+	.fa-spinner {
+		animation: loading 1s ease-out infinite;
+	}
+	@keyframes loading {
+		from{transform:rotateZ(0)}
+		to{transform: rotateZ(360deg);}
+	}
 </style>
 <script>
 import AuthorDetails from '../components/AuthorDetails.vue'
 
+import abi from '@/abi/abi.json'
+
 import axios from 'axios'
+import Web3 from 'web3'
+
 
 export default {
   components: { AuthorDetails },
@@ -148,7 +159,8 @@ export default {
 			description: '',
 			tags: [],
 			tag: '',
-			keyE: false
+			keyE: false,
+			loading: false
 		}
 	},
 	methods: {
@@ -182,6 +194,20 @@ export default {
 			}
 		},
 		async createArticle() {
+			//hashing ipfs
+			String.prototype.hashCode = function() {
+				var hash = 0, i, chr;
+				if (this.length === 0) return hash;
+				for (i = 0; i < this.length; i++) {
+					chr   = this.charCodeAt(i);
+					hash  = ((hash << 5) - hash) + chr;
+					hash |= 0; // Convert to 32bit integer
+				}
+				return hash;
+			};
+
+			this.loading = true
+
 			let formData = new FormData();
 			formData.append("media", document.querySelector('#file_upload').files[0]);
 			formData.append("title", this.title);
@@ -190,6 +216,20 @@ export default {
 			formData.append("intro", "TEst");
 			let res = await axios.post('/articles/nft',  formData)
 			console.log(res.data)
+
+			if(res.data.error == true) return
+			else {
+				let web3 = new Web3(Web3.givenProvider);
+				let myContract = new web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, {
+						from: this.account,
+						gasPrice: web3.eth.gas_price
+				});
+				let awa = await myContract.methods.mintNFT(res.data.preview).send({from: this.account})
+				console.log(awa.events.Transfer.returnValues.tokenId)
+				let awa2 = await myContract.methods.returnTokenIdByHash(res.data.preview).call()
+				console.log(awa2)
+				this.loading = false
+			}
 		}
 	},
 	async mounted() {

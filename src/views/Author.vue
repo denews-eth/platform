@@ -13,7 +13,7 @@
 
         <div class="col-12 col-xl-9">
           <!-- Profile verified -->
-          <div class="profile p-3" v-if="!verified">
+          <div class="profile p-3" v-if="!verified && twitter">
             <div class="row justify-content-center">
               <p class="mt-2 mr-3" style="color:#dedede">Profilo non verificato!</p>
               <a class="author__follow" style="background:#9e550b" href="/verify">Verifica</a>
@@ -113,7 +113,7 @@
           </div>
 
           <!-- content tabs -->
-          <div class="tab-content" v-if="twitter">
+          <div class="tab-content" v-if="!twitter">
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4">
@@ -153,7 +153,7 @@
               </div>
             </div>
           </div>
-          <div class="tab-content row flex-column" v-if="!twitter">
+          <div class="tab-content row flex-column" v-if="twitter">
             <div class="mx-auto">
               <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
               <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
@@ -187,7 +187,8 @@ export default {
       account: "",
       verified: false,
       twitter: false,
-      user: {}
+      user: {},
+      auth_token: ''
     };
   },
   props: ['oauth_token'],
@@ -199,19 +200,26 @@ export default {
   },
   methods: {
     async twitterLogin() {
-      if(localStorage.oauth_token === undefined || localStorage.oauth_token === "") {
+      console.log("tw login")
+      if(localStorage.getItem('oauth_token') === undefined || localStorage.getItem('oauth_token') === "") {
+        console.log("jundefined")
         if(this.oauth_token != undefined) {
           localStorage.oauth_token = this.oauth_token
           this.twitter = true
           let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
           this.user = res.data.user
         }
-        else this.twitter = false
+        else {
+          this.twitter = false
+        }
       }
       else {
-        let res = await axios.post('/twitter/validate', {oauth_token: localStorage.oauth_token})
+        console.log("avisi")
+        this.auth_token = localStorage.oauth_token
+        let res = await axios.post('/twitter/validate', {oauth_token: this.auth_token})
         this.user = res.data.user
         this.twitter = true
+        console.log(this.twitter)
       }
     }
   },
@@ -226,7 +234,7 @@ export default {
     if(localStorage.verified === "true") {
       this.verified = true
     }
-    await this.twitterLogin()
+    this.twitterLogin()
     
   },
 };
