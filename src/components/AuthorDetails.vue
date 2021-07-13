@@ -78,8 +78,5 @@ export default {
     }
   },
   props: ['twitter', 'account', 'user'],
-  mounted() {
-    console.log(this.account)
-  }
 }
 </script>

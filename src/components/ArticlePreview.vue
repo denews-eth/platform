@@ -2,7 +2,7 @@
   <!-- card -->
   <div class="card">
     <a class="card__cover" :href="'/article/'+article.hash">
-      <img :src="article.image" alt="">
+      <img :src="article.image" style="min-height:220px;object-fit:contain" alt="">
       <span class="card__time card__time--clock">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path

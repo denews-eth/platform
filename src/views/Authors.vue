@@ -58,7 +58,7 @@
 
 	</div>
 	<div class="row row--grid">
-		<AuthorPreview v-for="i in 8" :key="i" :link="'/author'"></AuthorPreview>
+		<AuthorPreview v-for="author in authors" :key="author.id" :author="author"></AuthorPreview>
 	</div>
 
 
@@ -72,12 +72,28 @@ import Paginator from '@/components/Paginator.vue'
 import AuthorPreview from '@/components/AuthorPreview.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 
+import axios from 'axios'
+
 export default {
   name: 'Home',
   components: {
 		Breadcrumb,
     Paginator,
 		AuthorPreview,
-  }
+  },
+	data() {
+		return {
+			authors: []
+		}
+	},
+	methods: {
+		async getAuthors() {
+			let res = await axios.get('/users')
+			this.authors = res.data
+		}
+	},
+	async mounted() {
+		await this.getAuthors()
+	}
 }
 </script>

@@ -3,23 +3,17 @@
     <div
       class="main__author"
       data-bg="img/bg/bg.png"
-      style="background: url('img/bg/bg.png') center center / cover no-repeat"
+      style="background: url('/img/bg/bg.png') center center / cover no-repeat"
     ></div>
     <div class="container">
       <div class="row row--grid">
         <div class="col-12 col-xl-3">
-          <AuthorDetails :twitter="twitter" :account="account" :user="user"></AuthorDetails>
+          <AuthorDetails :user="user" :twitter="true"></AuthorDetails>
         </div>
 
         <div class="col-12 col-xl-9">
-          <!-- Profile verified -->
-          <div class="profile p-3" v-if="!verified && twitter">
-            <div class="row justify-content-center">
-              <p class="mt-2 mr-3" style="color:#dedede">Profilo non verificato!</p>
-              <a class="author__follow" style="background:#9e550b" href="/verify">Verifica</a>
-            </div>
-          </div>
-          <div class="profile" v-if="twitter">
+
+          <div class="profile">
             <!-- tabs nav -->
             <ul
               class="nav nav-tabs profile__tabs"
@@ -28,24 +22,24 @@
             >
               <li class="nav-item" @click="selected = 'saved'">
                 <a
-                  class="nav-link active"
+                  :class="(selected=='saved')? 'nav-link active' : 'nav-link'"
                   data-toggle="tab"
-                  href="#tab-1"
                   role="tab"
                   aria-controls="tab-1"
                   aria-selected="true"
+                  style="cursor:pointer"
                   >Saved</a
                 >
               </li>
 
               <li class="nav-item" @click="selected = 'created'">
                 <a
-                  class="nav-link"
+                  :class="(selected=='created')? 'nav-link active' : 'nav-link'"
                   data-toggle="tab"
-                  href="#tab-2"
                   role="tab"
                   aria-controls="tab-2"
                   aria-selected="false"
+                  style="cursor:pointer"
                   >Created</a
                 >
               </li>
@@ -54,10 +48,10 @@
                 <a
                   class="nav-link"
                   data-toggle="tab"
-                  href="#tab-3"
                   role="tab"
                   aria-controls="tab-3"
                   aria-selected="false"
+                  style="cursor:pointer"
                   >My Activity</a
                 >
               </li>
@@ -65,55 +59,10 @@
             <!-- end tabs nav -->
           </div>
 
-          <!-- Profile NOT verified-->
-          <div class="profile" v-if="!twitter" id="ProfileNotVerified">
-            <!-- tabs nav -->
-            <ul
-              class="nav nav-tabs profile__tabs"
-              id="profile__tabs"
-              role="tablist"
-            >
-              <li class="nav-item" @click="selected = 'saved'">
-                <a
-                  class="nav-link active"
-                  data-toggle="tab"
-                  href="#tab-1"
-                  role="tab"
-                  aria-controls="tab-1"
-                  aria-selected="true"
-                  >Saved</a
-                >
-              </li>
-
-              <li class="nav-item" @click="selected = 'created'">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-2"
-                  role="tab"
-                  aria-controls="tab-2"
-                  aria-selected="false"
-                  >Created</a
-                >
-              </li>
-
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-3"
-                  role="tab"
-                  aria-controls="tab-3"
-                  aria-selected="false"
-                  >My Activity</a
-                >
-              </li>
-            </ul>
-            <!-- end tabs nav -->
-          </div>
+   
 
           <!-- content tabs -->
-          <div class="tab-content" v-if="twitter">
+          <div class="tab-content">
 
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
@@ -171,12 +120,6 @@
               </div>
             </div>
           </div>
-          <div class="tab-content row flex-column" v-if="!twitter">
-            <div class="mx-auto">
-              <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
-              <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
-            </div>
-          </div>
           <!-- end content tabs -->
         </div>
       </div>
@@ -184,11 +127,6 @@
   </main>
 </template>
 
-<style lang="css" scoped>
-  #ProfileNotVerified {overflow:hidden;}
-  #ProfileNotVerified ul::after{content: ''; position: absolute; top: 0;bottom: 0; right: 0; left: 0; background: rgb(22 21 26 / 67%); z-index: 1;}
-
-</style>
 
 <script>
 import AuthorDetails from "@/components/AuthorDetails.vue";
@@ -206,13 +144,13 @@ export default {
       verified: false,
       twitter: false,
       user: {articlesSaved:[]},
-      auth_token: '',
+      oauth_token: '',
       articles: [],
       articlesSaved: [],
       selected: 'saved'
     };
   },
-  props: ['oauth_token', 'screen_name'],
+  props: ['screen_name'],
   components: {
     AuthorDetails,
     ArticlePreview,
@@ -220,28 +158,6 @@ export default {
     Activity,
   },
   methods: {
-    async twitterLogin() {
-      if(localStorage.getItem('oauth_token') === null) {
-        if(this.oauth_token != undefined) {
-          this.auth_token = this.oauth_token
-          this.twitter = true
-          let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
-          this.user = res.data.user
-        }
-        else {
-          this.twitter = false
-          localStorage.removeItem('oauth_token')
-          localStorage.removeItem('verified')
-          this.verified = false
-        }
-      }
-      else {
-        this.auth_token = localStorage.oauth_token
-        let res = await axios.post('/twitter/validate', {oauth_token: this.auth_token})
-        this.user = res.data.user
-        this.twitter = true
-      }
-    },
     async getArticles() {
       let res = await axios.post('/articles/search', {author:this.user.screen_name} )
       this.articles = res.data
@@ -249,7 +165,7 @@ export default {
       this.articlesSaved = res2.data
     },
     async editProfile(hash, saved) {
-      if(this.oauth_token !== "") {
+      if(this.oauth_token !== '') {
         if(saved == true) {
           this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
           let i = 0;
@@ -293,9 +209,15 @@ export default {
     if(localStorage.verified === "true") {
       this.verified = true
     }
-    await this.twitterLogin()
-    if(this.twitter) await this.getArticles()
-    
+    if(this.screen_name != undefined && this.screen_name != '') {
+      let res = await axios.get('/users/profile/'+this.screen_name)
+      this.user = res.data
+      console.log(this.user)
+    }
+    await this.getArticles()
+    if(localStorage.getItem('oauth_token') !== null) this.oauth_token = localStorage.getItem('oauth_token')
+    console.log(this.articles)
+    console.log(this.articlesSaved)
   },
 };
 </script>

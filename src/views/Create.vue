@@ -23,20 +23,15 @@
 
 							<div class="col-12">
 								<div class="sign__file">
-									<label for="file_upload">e. g. Image, Audio, Video</label>
-									<input data-name="#file_upload" id="file_upload" name="file_upload" class="sign__file-upload" type="file" accept="video/mp4,video/x-m4v,video/*,.png,.jpg,.jpeg">
+									<label for="preview_image_upload">e. g. Image, Audio, Video</label>
+									<input data-name="#preview_image_upload" @change="previewImage()" id="preview_image_upload" name="preview_image_upload" class="sign__file-upload" type="file" ref="preview_image_upload" accept="video/mp4,video/x-m4v,video/*,.png,.jpg,.jpeg">
 								</div>
 							</div>
 							<div class="col-12">
-								<h4 class="sign__title">Upload Preview image</h4>
+								<img :src="preview_image" ref="preview_image" alt="Preview image" style="min-height:0; width:100%;object-fit:contain;overflow:hidden">
 							</div>
 
-							<div class="col-12">
-								<div class="sign__file">
-									<label for="preview_image_upload">e. g. Image, Audio, Video</label>
-									<input data-name="#preview_image_upload" id="preview_image_upload" name="preview_image_upload" class="sign__file-upload" type="file" accept="video/mp4,video/x-m4v,video/*,.png,.jpg,.jpeg">
-								</div>
-							</div>
+
 							<div class="col-12">
 								<h4 class="sign__title">Item details</h4>
 							</div>
@@ -168,7 +163,8 @@ export default {
 			tags: [],
 			tag: '',
 			keyE: false,
-			loading: false
+			loading: false,
+			preview_image: ''
 		}
 	},
 	methods: {
@@ -231,6 +227,10 @@ export default {
 				console.log(awa2)
 				this.loading = false
 			}
+		},
+		previewImage() {
+			this.$refs.preview_image.minHeight = '200px'
+			this.$refs.preview_image.src = URL.createObjectURL(document.getElementById('preview_image_upload').files[0])			
 		}
 	},
 	async mounted() {
@@ -246,7 +246,6 @@ export default {
 		else {
 			this.twitterLogin()
 		}
-		setTimeout(() => console.log(this.user), 2000)
 	}
 }
 </script>

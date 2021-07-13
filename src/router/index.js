@@ -11,6 +11,7 @@ import HelpCenter from '../views/HelpCenter.vue'
 import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import Verify from '../views/Verify.vue'
+import PublicAuthor from '../views/PublicAuthor.vue'
 
 const routes = [
   {
@@ -30,10 +31,15 @@ const routes = [
     component: Authors
   },
   {
+    path: '/author/:screen_name',
+    name: 'PublicAuthor',
+    component: PublicAuthor,
+    props: true
+  },
+  {
     path: '/author',
     name: 'Author',
     component: Author,
-    props:true
   },
   {
     path: '/explore',

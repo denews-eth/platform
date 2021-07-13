@@ -58,6 +58,7 @@
 </template>
 
 <script>
+
 // @ is an alias to /src
 import Carousel from '@/components/Carousel.vue'
 import ArticlePreview from '@/components/ArticlePreview.vue'
