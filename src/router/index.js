@@ -17,12 +17,12 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    props:true
   },
   {
-    path: '/article/:articleId',
+    path: '/article/:hash',
     name: 'Article',
     component: Article,
+    props:true
   },
   {
     path: '/authors',

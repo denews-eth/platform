@@ -38,8 +38,8 @@ export default {
       account: "",
       web3: "",
       balance: 0,
-      selected_network: 137,
-      selected_ticker: "MATIC",
+      selected_network: process.env.VUE_APP_CHAIN_ID,
+      selected_ticker: process.env.VUE_APP_TICKER,
       user: {}
     };
   },
@@ -49,7 +49,7 @@ export default {
       if (window.ethereum) {
         // Check if network is desired one
         const network = await app.web3.eth.net.getId();
-        if (network === app.selected_network) {
+        if (network === parseInt(app.selected_network)) {
           // Request accounts
           await window.ethereum.send("eth_requestAccounts");
           // Read accounts
@@ -65,7 +65,11 @@ export default {
           }
         } else {
           // If not prompt for network change
-          app.switchNetwork();
+          if(parseInt(app.selected_network) !== 5777){
+            app.switchNetwork();
+          }else{
+            alert('Switch to Ganache Network!')
+          }
         }
       } else {
         alert("Please install Metamask");
@@ -81,24 +85,24 @@ export default {
     },
     async switchNetwork() {
       const app = this;
-
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: "0x89",
-            chainName: "Polygon",
-            rpcUrls: ["https://rpc-mainnet.matic.network"],
-            nativeCurrency: {
-              name: "MATIC",
-              symbol: "MATIC",
-              decimals: 18,
+      if(process.env.VUE_APP_NETWORK === 'mumbai') {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x89",
+              chainName: "Polygon",
+              rpcUrls: ["https://rpc-mainnet.matic.network"],
+              nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18,
+              },
+              blockExplorerUrls: ["https://polygonscan.com/"],
             },
-            blockExplorerUrls: ["https://polygonscan.com/"],
-          },
-        ],
-      });
-
+          ],
+        });
+      }
       app.connect();
     },
   },

@@ -22,7 +22,7 @@
         <!-- explore -->
         
         <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article._id">
-          <ArticlePreview :article="article" v-on:article_saved="editProfile(article._id)"></ArticlePreview>
+          <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
         </div>
 
         <div class="col-12">
@@ -65,7 +65,7 @@ export default {
       articleSavedSuccess: false,
       oauth_token: "",
       account: "",
-      user: {},
+      user: {articles_saved:[]},
       verified: false,
       twitter: false,
       articles: []
@@ -90,26 +90,37 @@ export default {
         this.articles = res.data
       }
     },
-    async editProfile(articleId) {
-      let app = this
-      console.log(app.user)
+    async editProfile(hash, saved) {
       if(this.oauth_token !== "") {
-        this.user.articles_saved.push(articleId)
-        let res = await axios.post('/users/edit', {
-          oauth_token: this.oauth_token,
-          address: this.account,
-          articles_saved: (app.user.articles_saved.length <= 1) ? [articleId] : app.user.articles_saved
-        })
-        if(res.data.error == true) {
-          this.articleSavedSuccess = false
-          return
+        if(saved == true) {
+          this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
+          let i = 0;
+          let temp = this.user.articles_saved
+          this.user.articles_saved = []
+          temp.forEach(el => {
+            if(el != null) {
+              this.user.articles_saved[i] = temp[i]
+              i++
+            }
+          });
+          
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
         }
         else {
-          this.articleSavedSuccess = true
+          this.user.articles_saved.push(hash)
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
         }
       }
       else {
-        location.href="/author"
+        this.$router.push({ name: 'Author'})
       }
     }
   },

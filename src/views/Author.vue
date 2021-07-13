@@ -26,7 +26,7 @@
               id="profile__tabs"
               role="tablist"
             >
-              <li class="nav-item">
+              <li class="nav-item" @click="selected = 'saved'">
                 <a
                   class="nav-link active"
                   data-toggle="tab"
@@ -34,11 +34,11 @@
                   role="tab"
                   aria-controls="tab-1"
                   aria-selected="true"
-                  >On Sale</a
+                  >Saved</a
                 >
               </li>
 
-              <li class="nav-item">
+              <li class="nav-item" @click="selected = 'created'">
                 <a
                   class="nav-link"
                   data-toggle="tab"
@@ -73,7 +73,7 @@
               id="profile__tabs"
               role="tablist"
             >
-              <li class="nav-item">
+              <li class="nav-item" @click="selected = 'saved'">
                 <a
                   class="nav-link active"
                   data-toggle="tab"
@@ -81,11 +81,11 @@
                   role="tab"
                   aria-controls="tab-1"
                   aria-selected="true"
-                  >On Sale</a
+                  >Saved</a
                 >
               </li>
 
-              <li class="nav-item">
+              <li class="nav-item" @click="selected = 'created'">
                 <a
                   class="nav-link"
                   data-toggle="tab"
@@ -113,14 +113,32 @@
           </div>
 
           <!-- content tabs -->
-          <div class="tab-content" v-if="!twitter">
-            <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
+          <div class="tab-content" v-if="twitter">
+
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
-                <div class="col-12 col-sm-6 col-lg-4">
-                  <ArticlePreview></ArticlePreview>
+                <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
+                  <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                </div>
+                <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">There are no saved articles</h3>
+                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px" @click="() => $router.push({name:'Explore'})">Go to collection</button>                  
                 </div>
               </div>
-              <Paginator></Paginator>
+              <Paginator v-if="articlesSaved.length > 3"></Paginator>
+            </div>
+
+            <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='created'">
+              <div class="row row--grid">
+                <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
+                  <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                </div>
+                <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">You have not created any articles yet</h3>
+                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto" @click="() => $router.push({name:'Create'})">Create a new one</button>                  
+                </div>
+              </div>
+              <Paginator v-if="articles.length > 3"></Paginator>
             </div>
 
             <div class="tab-pane fade" id="tab-3" role="tabpanel">
@@ -153,7 +171,7 @@
               </div>
             </div>
           </div>
-          <div class="tab-content row flex-column" v-if="twitter">
+          <div class="tab-content row flex-column" v-if="!twitter">
             <div class="mx-auto">
               <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
               <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
@@ -187,8 +205,11 @@ export default {
       account: "",
       verified: false,
       twitter: false,
-      user: {},
-      auth_token: ''
+      user: {articlesSaved:[]},
+      auth_token: '',
+      articles: [],
+      articlesSaved: [],
+      selected: 'saved'
     };
   },
   props: ['oauth_token'],
@@ -200,26 +221,64 @@ export default {
   },
   methods: {
     async twitterLogin() {
-      console.log("tw login")
-      if(localStorage.getItem('oauth_token') === undefined || localStorage.getItem('oauth_token') === "") {
-        console.log("jundefined")
+      if(localStorage.getItem('oauth_token') === null) {
         if(this.oauth_token != undefined) {
-          localStorage.oauth_token = this.oauth_token
+          this.auth_token = this.oauth_token
           this.twitter = true
           let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
           this.user = res.data.user
         }
         else {
           this.twitter = false
+          localStorage.removeItem('oauth_token')
+          localStorage.removeItem('verified')
+          this.verified = false
         }
       }
       else {
-        console.log("avisi")
         this.auth_token = localStorage.oauth_token
         let res = await axios.post('/twitter/validate', {oauth_token: this.auth_token})
         this.user = res.data.user
         this.twitter = true
-        console.log(this.twitter)
+      }
+    },
+    async getArticles() {
+      let res = await axios.post('/articles/search', {author:this.user.screen_name} )
+      this.articles = res.data
+      let res2 = await axios.post('/articles/saved', {hash: this.user.articles_saved } )
+      this.articlesSaved = res2.data
+    },
+    async editProfile(hash, saved) {
+      if(this.oauth_token !== "") {
+        if(saved == true) {
+          this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
+          let i = 0;
+          let temp = this.user.articles_saved
+          this.user.articles_saved = []
+          temp.forEach(el => {
+            if(el != null) {
+              this.user.articles_saved[i] = temp[i]
+              i++
+            }
+          });
+          
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
+        }
+        else {
+          this.user.articles_saved.push(hash)
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
+        }
+      }
+      else {
+        this.$router.push({ name: 'Author'})
       }
     }
   },
@@ -234,7 +293,8 @@ export default {
     if(localStorage.verified === "true") {
       this.verified = true
     }
-    this.twitterLogin()
+    await this.twitterLogin()
+    if(this.twitter) await this.getArticles()
     
   },
 };

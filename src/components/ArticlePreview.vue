@@ -1,8 +1,8 @@
 <template>
   <!-- card -->
   <div class="card">
-    <a class="card__cover" :href="'/article/'+article._id">
-      <img :src="article.item_details.preview_img" alt="">
+    <a class="card__cover" :href="'/article/'+article.hash">
+      <img :src="article.image" alt="">
       <span class="card__time card__time--clock">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path
@@ -12,9 +12,9 @@
         <span class="card__clock card__clock--2">07:28:34</span>
       </span>
     </a>
-    <h3 class="card__title"><a v-html="article.item_details.name" :href="'/article/'+article._id"></a></h3>
+    <h3 class="card__title"><a v-html="article.name" :href="'/article/'+article.hash"></a></h3>
     <div class="card__author">
-      <img :src="article.author_img" alt="">
+      <img src="authorimage" alt="">
       <a href="author.html" v-html="'@'+article.author"></a>
     </div>
     <div class="card__info">
@@ -23,7 +23,7 @@
         <span>4.89 ETH</span>
       </div>
 
-      <button class="card__likes" type="button" @click="$emit('article_saved')">
+      <button :class="(saved) ? 'card__likes card__likes--active' : 'card__likes' " type="button" @click="$emit('article_saved')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path
             d="M20.16,5A6.29,6.29,0,0,0,12,4.36a6.27,6.27,0,0,0-8.16,9.48l6.21,6.22a2.78,2.78,0,0,0,3.9,0l6.21-6.22A6.27,6.27,0,0,0,20.16,5Zm-1.41,7.46-6.21,6.21a.76.76,0,0,1-1.08,0L5.25,12.43a4.29,4.29,0,0,1,0-6,4.27,4.27,0,0,1,6,0,1,1,0,0,0,1.42,0,4.27,4.27,0,0,1,6,0A4.29,4.29,0,0,1,18.75,12.43Z">
@@ -39,6 +39,6 @@
 <script>
   export default {
     name: "ArticlePreview",
-    props: ['article'],
+    props: ['article', 'saved']
   }
 </script>

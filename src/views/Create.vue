@@ -60,12 +60,19 @@
 
 							<div class="col-12">
 								<div class="sign__group">
-									<label class="sign__label" for="description">Description</label>
-									<textarea id="description" name="description" class="sign__textarea" placeholder="e. g. 'After purchasing you will able to recived...'" v-model="description"></textarea>
+									<label class="sign__label" for="intro">Intro</label>
+									<textarea id="intro" name="intro" class="sign__textarea" placeholder="Article abstract or introduction" maxlength="255" style="height:115px" v-model="intro"></textarea>
 								</div>
 							</div>
 
-							<div class="col-12 col-md-4">
+							<div class="col-12">
+								<div class="sign__group">
+									<label class="sign__label" for="description">Description</label>
+									<textarea id="description" name="description" class="sign__textarea" placeholder="e. g. 'After purchasing you will able to recived...'" style="height:250px" maxlength="3000" v-model="description"></textarea>
+								</div>
+							</div>
+
+							<!-- <div class="col-12 col-md-4">
 								<div class="sign__group">
 									<label class="sign__label" for="royalties">Royalties</label>
 									<select id="royalties" name="royalties" class="sign__select">
@@ -88,9 +95,9 @@
 									<label class="sign__label" for="propertie">Propertie</label>
 									<input id="propertie" type="text" name="propertie" class="sign__input" placeholder="Subject">
 								</div>
-							</div>
+							</div> -->
 
-							<div class="col-12">
+							<!-- <div class="col-12">
 								<div class="sign__group sign__group--row">
 									<ul class="sign__radio sign__radio--single">
 										<li>
@@ -107,7 +114,7 @@
 										</li>
 									</ul>
 								</div>
-							</div>
+							</div> -->
 
 							<div class="col-12 col-xl-3">
 								<button type="button" class="sign__btn" @click="createArticle()">Create item <i class="fa fa-spinner ml-2" v-if="loading"></i> </button>
@@ -156,6 +163,7 @@ export default {
 			account: "",
 			twitter :false,
 			title: '',
+			intro: '',
 			description: '',
 			tags: [],
 			tag: '',
@@ -172,7 +180,10 @@ export default {
           let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
           this.user = res.data.user
         }
-        else this.twitter = false
+        else {
+					location.href = '/'
+					this.twitter = false
+				}
       }
       else {
         let res = await axios.post('/twitter/validate', {oauth_token: localStorage.oauth_token})
@@ -194,26 +205,16 @@ export default {
 			}
 		},
 		async createArticle() {
-			//hashing ipfs
-			String.prototype.hashCode = function() {
-				var hash = 0, i, chr;
-				if (this.length === 0) return hash;
-				for (i = 0; i < this.length; i++) {
-					chr   = this.charCodeAt(i);
-					hash  = ((hash << 5) - hash) + chr;
-					hash |= 0; // Convert to 32bit integer
-				}
-				return hash;
-			};
 
 			this.loading = true
 
 			let formData = new FormData();
 			formData.append("media", document.querySelector('#file_upload').files[0]);
 			formData.append("title", this.title);
-			formData.append("body", this.dscription);
+			formData.append("body", this.description);
 			formData.append("tag", JSON.stringify(this.tags.join()));
-			formData.append("intro", "TEst");
+			formData.append("intro", this.intro);
+			formData.append("author", this.user.screen_name);
 			let res = await axios.post('/articles/nft',  formData)
 			console.log(res.data)
 
@@ -224,9 +225,9 @@ export default {
 						from: this.account,
 						gasPrice: web3.eth.gas_price
 				});
-				let awa = await myContract.methods.mintNFT(res.data.preview).send({from: this.account})
+				let awa = await myContract.methods.mintNFT(res.data.nft.ipfs).send({from: this.account})
 				console.log(awa.events.Transfer.returnValues.tokenId)
-				let awa2 = await myContract.methods.returnTokenIdByHash(res.data.preview).call()
+				let awa2 = await myContract.methods.returnTokenIdByHash(res.data.nft.ipfs).call()
 				console.log(awa2)
 				this.loading = false
 			}
@@ -239,12 +240,13 @@ export default {
     } else {
       window.location.href = "/";
     }
-		if(localStorage.getItem('verified') === "false" || localStorage.getItem('verified') === null) {
+		if(localStorage.getItem('verified') === "false" || localStorage.getItem('verified') === null || localStorage.getItem('oauth_token') === null) {
 			location.href = "/"
 		}
 		else {
 			this.twitterLogin()
 		}
+		setTimeout(() => console.log(this.user), 2000)
 	}
 }
 </script>
