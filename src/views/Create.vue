@@ -28,7 +28,8 @@
 								</div>
 							</div>
 							<div class="col-12">
-								<img :src="preview_image" ref="preview_image" alt="Preview image" style="min-height:0; width:100%;object-fit:contain;overflow:hidden">
+								<img :src="preview_image" id="preview_img" v-if="preview_image.length > 0 " alt="Preview image" style="background-image: linear-gradient(45deg, #1a171f, transparent);height:250px; width:100%;object-fit:contain;overflow:hidden">
+								<button class="sign__btn mx-auto mt-4" style="background:#282835;width:200px" v-if="preview_image.length>0" @click="removeImage()">Annulla</button>
 							</div>
 
 
@@ -205,7 +206,7 @@ export default {
 			this.loading = true
 
 			let formData = new FormData();
-			formData.append("media", document.querySelector('#file_upload').files[0]);
+			formData.append("media", document.getElementById('preview_image_upload').files[0]);
 			formData.append("title", this.title);
 			formData.append("body", this.description);
 			formData.append("tag", JSON.stringify(this.tags.join()));
@@ -229,9 +230,14 @@ export default {
 			}
 		},
 		previewImage() {
-			this.$refs.preview_image.minHeight = '200px'
-			this.$refs.preview_image.src = URL.createObjectURL(document.getElementById('preview_image_upload').files[0])			
-		}
+			setTimeout(() => {
+				this.preview_image =  URL.createObjectURL(document.getElementById('preview_image_upload').files[0])
+			}, 500)			
+		},
+    removeImage() {
+      document.getElementById('preview_image_upload').value = ''
+      this.preview_image = ''
+    },
 	},
 	async mounted() {
 		const connected = localStorage.getItem("connected");

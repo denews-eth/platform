@@ -142,7 +142,7 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <img src="img/avatars/avatar5.jpg" alt="" />
+            <img :src="user.profile_image_url" alt="" />
             <div>
               <p
                 style="overflow: hidden; width: 150px; text-overflow: ellipsis"
@@ -242,7 +242,7 @@
 </template>
 <script>
 export default {
-  props: ["account", "balance", "ticker"],
-  name: "Header",
+  props: ["account", "balance", "ticker", "user"],
+  name: "Header"
 };
 </script>

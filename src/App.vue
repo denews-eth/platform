@@ -6,6 +6,7 @@
       :account="account"
       :balance="balance"
       :ticker="selected_ticker"
+      :user ="user"
     ></Header>
     <router-view />
     <Footer></Footer>
@@ -123,24 +124,21 @@ export default {
     }
     //Verify profile
     if(localStorage.getItem('oauth_token') !== null) {
-      if(localStorage.getItem('verified') === null) {
-        let res = await axios.post('/twitter/validate', {
-          oauth_token: localStorage.getItem('oauth_token'),
-          address: localStorage.getItem('connected')
-          })
-        if(res.data.error == true) {return;}
+      let res = await axios.post('/twitter/validate', {
+        oauth_token: localStorage.getItem('oauth_token'),
+        address: localStorage.getItem('connected')
+        })
+      if(res.data.error == true) {return;}
+      else {
+        this.user = res.data.user
+        if(this.user.birth_date === null || this.user.name === null || this.user.surname === null || this.user.email === null || this.user.description === null || this.user.description === null || this.user.codice_fiscale === null || this.user.linkedin_profile_url === null) {
+          localStorage.setItem('verified', "false")
+        }
         else {
-          this.user = res.data.user
-          if(this.user.birth_date === null || this.user.name === null || this.user.surname === null || this.user.email === null || this.user.description === null || this.user.description === null || this.user.codice_fiscale === null || this.user.linkedin_profile_url === null) {
-            localStorage.setItem('verified', "false")
-          }
-          else {
-            localStorage.setItem('verified', "true")
-          }
+          localStorage.setItem('verified', "true")
         }
       }
     }
-    
   },
 };
 </script>

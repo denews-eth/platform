@@ -37,8 +37,8 @@
           </ul>
         </div>
         <!-- end tabs nav -->
-        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" v-for="article in articles" :key="article._id">
-          <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3" v-for="article in articles" :key="article.hash">
+          <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
         </div>
 
         <div class="col-12">
@@ -78,7 +78,9 @@ export default {
       articles: [],
       user: {articles_saved:[]},
       oauth_token: '',
-      twitter: false
+      twitter: false,
+      users: [],
+      account: ''
     }
   },
   methods: {
@@ -99,42 +101,60 @@ export default {
       }
     },
     async editProfile(hash, saved) {
-        if(this.oauth_token !== "") {
-          if(saved == true) {
-            this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
-            let i = 0;
-            let temp = this.user.articles_saved
-            this.user.articles_saved = []
-            temp.forEach(el => {
-              if(el != null) {
-                this.user.articles_saved[i] = temp[i]
-                i++
-              }
-            });
-            
-            let res = await axios.post('/users/edit', {
-              oauth_token: this.oauth_token,
-              address: this.account,
-              articles_saved: this.user.articles_saved
-            })
-          }
-          else {
-            this.user.articles_saved.push(hash)
-            let res = await axios.post('/users/edit', {
-              oauth_token: this.oauth_token,
-              address: this.account,
-              articles_saved: this.user.articles_saved
-            })
-          }
+      if(this.oauth_token !== "") {
+        if(saved == true) {
+          this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
+          let i = 0;
+          let j = 0;
+          let temp = this.user.articles_saved
+          this.user.articles_saved = []
+          temp.forEach(el => {
+            if(el != null) {
+              this.user.articles_saved[j] = temp[i]
+              j++
+            }
+            i++
+          });
+          
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
+          console.log(res.data)
         }
         else {
-          this.$router.push({ name: 'Author'})
+          this.user.articles_saved.push(hash)
+          let res = await axios.post('/users/edit', {
+            oauth_token: this.oauth_token,
+            address: this.account,
+            articles_saved: this.user.articles_saved
+          })
         }
       }
+      else {
+        this.$router.push({ name: 'Author'})
+      }
+    },
+    search(target, myArray){
+      for (let i=0; i < myArray.length; i++) {
+        if (myArray[i].screen_name === target) {
+          return myArray[i];
+        }
+      }
+    },
+    async getUsers() {
+      let res = await axios.get('/users') 
+      this.users = res.data
+    },
   },
   async mounted() {
+    if (localStorage.getItem("connected") !== null) {
+      this.account = localStorage.getItem("connected")
+    }
     await this.twitterLogin()
     await this.getArticles()
+    await this.getUsers()
 
   }
 }

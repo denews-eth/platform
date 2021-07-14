@@ -2,8 +2,7 @@
   <main class="main">
     <div
       class="main__author"
-      data-bg="img/bg/bg.png"
-      style="background: url('/img/bg/bg.png') center center / cover no-repeat"
+      :style="(user.profile_background_image_url == null) ? 'background: url(/img/bg/bg.png) center center / cover no-repeat' : 'background: url('+user.profile_background_image_url+') center center / cover no-repeat'"
     ></div>
     <div class="container">
       <div class="row row--grid">
@@ -67,7 +66,7 @@
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
-                  <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">There are no saved articles</h3>
@@ -80,7 +79,7 @@
             <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
-                  <ArticlePreview :article="article" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">You have not created any articles yet</h3>
@@ -147,7 +146,8 @@ export default {
       oauth_token: '',
       articles: [],
       articlesSaved: [],
-      selected: 'saved'
+      selected: 'saved',
+      users: []
     };
   },
   props: ['screen_name'],
@@ -169,13 +169,15 @@ export default {
         if(saved == true) {
           this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
           let i = 0;
+          let j = 0;
           let temp = this.user.articles_saved
           this.user.articles_saved = []
           temp.forEach(el => {
             if(el != null) {
-              this.user.articles_saved[i] = temp[i]
-              i++
+              this.user.articles_saved[j] = temp[i]
+              j++
             }
+            i++
           });
           
           let res = await axios.post('/users/edit', {
@@ -196,6 +198,17 @@ export default {
       else {
         this.$router.push({ name: 'Author'})
       }
+    },
+    search(target, myArray){
+      for (let i=0; i < myArray.length; i++) {
+        if (myArray[i].screen_name === target) {
+          return myArray[i];
+        }
+      }
+    },
+    async getUsers() {
+      let res = await axios.get('/users') 
+      this.users = res.data
     }
   },
   async mounted() {
@@ -216,8 +229,7 @@ export default {
     }
     await this.getArticles()
     if(localStorage.getItem('oauth_token') !== null) this.oauth_token = localStorage.getItem('oauth_token')
-    console.log(this.articles)
-    console.log(this.articlesSaved)
+    await this.getUsers()
   },
 };
 </script>

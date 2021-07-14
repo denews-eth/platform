@@ -2,7 +2,6 @@
 <main class="main">
   <div class="container">
     <div class="row row--grid">
-      <Breadcrumb></Breadcrumb>
 
       <!-- title -->
       <div class="col-12 col-lg-10 col-xl-9 mx-auto">
@@ -14,9 +13,30 @@
     </div>
 
     <div class="row row--grid">
-      <div class="col-12 col-lg-10 col-xl-9 mx-auto">
-        <form class="sign__form sign__form--contacts" @submit.prevent="editProfile()">
+      <div class="col-12 col-lg-12 col-xl-9 mx-auto">
+        <form class="sign__form sign__form--contacts" @submit.prevent="false">
           <div class="row">
+            <div class="col-7 mx-auto col-md-3">
+              <div class="mb-3" style="height:200px;">
+                <div class="sign__file" style="height:100%">
+                  <label for="profile_image_url" class="pl-5 pr-4" v-show="preview_image.length == 0" style="height:100%">Upload your profile image (400x400) <i class="fa fa-upload mx-2"></i></label>
+                  <input data-name="#profile_image_url" v-show="preview_image.length == 0" @change="previewImage()" id="profile_image_url" name="profile_image_url" class="sign__file-upload" type="file" ref="preview_image_upload" accept=".png,.jpg,.jpeg">
+                  <img :src="preview_image" id="preview_img" v-show="preview_image.length > 0" alt="Preview image" style="margin:0;background-image: linear-gradient(45deg, #1a171f, transparent);height:100%; width:100%;object-fit:cover;overflow:hidden">
+                  <button id="closeImg" v-show="preview_image.length > 0" @click="removeImage()"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-9">
+              <div class="mb-3" style="height:200px;">
+                <div class="sign__file" style="height:100%">
+                  <label for="profile_banner" class="p-5" v-show="profile_banner.length == 0" style="height:100%">Upload your profile image (1500x500) <i class="fa fa-upload mx-2"></i></label>
+                  <input data-name="#profile_banner" v-show="profile_banner.length == 0" @change="bannerImage()" id="profile_banner" name="profile_banner" class="sign__file-upload" type="file" ref="preview_image_upload" accept=".png,.jpg,.jpeg">
+                  <img :src="profile_banner" id="preview_img" v-show="profile_banner.length > 0" alt="Preview image" style="margin:0;background-image: linear-gradient(45deg, #1a171f, transparent);height:100%; width:100%;object-fit:cover;overflow:hidden">
+                  <button id="closeImg" v-show="profile_banner.length > 0" @click="removeBannerImage()"><i class="fa fa-times"></i></button>
+                </div>
+              </div>             
+            </div>
+
             <div class="col-12 col-md-6">
               <div class="sign__group">
                 <input type="text" name="name" class="sign__input" :style="(errors.name) ? 'border-color:#bd251a;' : ''" placeholder="Name" v-model="user.name">
@@ -103,6 +123,17 @@
     from {transform: rotateZ(0);}
     to {transform: rotateZ(360deg);}
   }
+
+  #closeImg {
+    position: absolute;
+    top:0;
+    right:0;
+    font-size: 23px;
+    margin:5px 10px;
+    filter: invert(1);
+    cursor: pointer;
+    z-index: 9;
+  }
 </style>
 <script>
 import axios from 'axios'
@@ -124,7 +155,9 @@ export default {
         description:false,
         codice_fiscale: false,
         linkedin_profile_url: false
-      }
+      },
+      preview_image: '',
+      profile_banner: ''
     }
   },
   props: ['oauth_token'],
@@ -137,7 +170,7 @@ export default {
           let res = await axios.post('/twitter/validate', {oauth_token: app.oauth_token})
           app.user = res.data.user
         }
-        else location.href = '/'
+        //else location.href = '/'
       }
       else {
         app.auth_token = localStorage.oauth_token
@@ -179,17 +212,25 @@ export default {
       }
       this.loading = true
       this.$refs.editBtn.setAttribute('disabled', 'disabled')
-      let res = await axios.post('/users/edit', {
-        oauth_token: this.auth_token,
-        address: this.account,
-        name: this.user.name,
-        description: this.user.description,
-        birth_date: this.user.birth_date,
-        linkedin_profile_url: this.user.linkedin_profile_url,
-        codice_fiscale: this.user.codice_fiscale,
-        surname: this.user.surname,
-        email: this.user.email
-      })
+      let formData = new FormData();
+      formData.append("oauth_token", this.auth_token);
+      formData.append("address", this.account);
+      if(document.getElementById('profile_image_url').files[0] != null) {
+        formData.append("images", document.getElementById('profile_image_url').files[0], 'profile_img');
+      }
+      if(document.getElementById('profile_banner').files[0] != null) {
+        formData.append("images", document.getElementById('profile_banner').files[0], 'profile_banner_img');
+      }
+			formData.append("name", this.user.name);
+			formData.append("description", this.user.description);
+			formData.append("birth_date", this.user.birth_date);
+			formData.append("linkedin_profile_url", this.user.linkedin_profile_url);
+			formData.append("codice_fiscale", this.user.codice_fiscale);
+      formData.append("surname", this.user.surname);
+      formData.append("email", this.user.email);
+        let res = await axios.post('/users/edit', formData, {headers: {
+        'Content-Type': 'multipart/form-data'
+      }})  
       if(res.data.error == true) {
         this.loading = false
         this.$refs.editBtn.removeAttribute('disabled')
@@ -206,6 +247,24 @@ export default {
         setTimeout(() => {location.href = '/'}, 2000)
       }
     },
+		previewImage() {
+			setTimeout(() => {
+				this.preview_image =  URL.createObjectURL(document.getElementById('profile_image_url').files[0])
+			}, 500)			
+		},
+    removeImage() {
+      document.getElementById('profile_image_url').value = ''
+      this.preview_image = ''
+    },
+    bannerImage() {
+      setTimeout(() => {
+				this.profile_banner =  URL.createObjectURL(document.getElementById('profile_banner').files[0])
+			}, 500)
+    },
+    removeBannerImage() {
+      document.getElementById('profile_banner').value = ''
+      this.profile_banner = ''      
+    }
   },
   async mounted() {
     let connected = localStorage.connected
@@ -213,7 +272,7 @@ export default {
     if ( connected !== null) {
       this.account = connected;
       if(localStorage.getItem('verified') === "true") {
-            location.href = '/'
+            //location.href = '/'
       }
     } else {
       location.href = "/";

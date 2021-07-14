@@ -3,7 +3,7 @@
   <div class="author"><a :href="'/author/'+author.screen_name" class="author__cover author__cover--bg" data-bg="img/bg/bg-small.png"
       style="background: url(&quot;img/bg/bg-small.png&quot;) center center / cover no-repeat;"></a>
     <div class="author__meta"><a :href="'/author/'+author.screen_name" class="author__avatar author__avatar--verified"><img
-          src="img/avatars/avatar.jpg" alt=""></a>
+          :src="author.profile_image_url_https" alt=""></a>
       <h3 class="author__name"><a :href="'/author/'+author.screen_name">Adam Zapel</a></h3>
       <h3 class="author__nickname"><a :href="'/author/'+author.screen_name">@aaarthur</a></h3>
       <p class="author__text">All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as

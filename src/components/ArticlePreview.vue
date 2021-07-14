@@ -1,7 +1,7 @@
 <template>
   <!-- card -->
-  <div class="card">
-    <a class="card__cover" :href="'/article/'+article.hash">
+  <div class="card" style="cursor:pointer">
+    <router-link class="card__cover" :to="{ name: 'Article', params: { hash: article.hash } }">
       <img :src="article.image" style="min-height:220px;object-fit:contain" alt="">
       <span class="card__time card__time--clock">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -11,11 +11,11 @@
         </svg>
         <span class="card__clock card__clock--2">07:28:34</span>
       </span>
-    </a>
+    </router-link>
     <h3 class="card__title"><a v-html="article.name" :href="'/article/'+article.hash"></a></h3>
     <div class="card__author">
-      <img src="authorimage" alt="">
-      <a href="author.html" v-html="'@'+article.author"></a>
+      <img :src="author_image" alt="">
+      <router-link :to="{ name: 'PublicAuthor', params: { screen_name: article.author } }" v-html="'@'+article.author"></router-link>
     </div>
     <div class="card__info">
       <div class="card__price">
@@ -39,6 +39,6 @@
 <script>
   export default {
     name: "ArticlePreview",
-    props: ['article', 'saved']
+    props: ['article', 'saved', 'author_image']
   }
 </script>
