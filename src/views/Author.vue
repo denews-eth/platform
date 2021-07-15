@@ -1,9 +1,8 @@
 <template>
   <main class="main">
-    <div
-      class="main__author"
-      :style="(user.profile_background_image_url == null) ? 'background: url(/img/bg/bg.png) center center / cover no-repeat' : 'background: url('+user.profile_background_image_url+') center center / cover no-repeat'"
-    ></div>
+    <div class="main__author"
+      :style="(user.profile_background_image_url == null) ? 'background: url(/img/bg/bg.png) center center / cover no-repeat' : 'background: url('+user.profile_background_image_url+') center center / cover no-repeat'">
+    </div>
     <div class="container">
       <div class="row row--grid">
         <div class="col-12 col-xl-3">
@@ -20,45 +19,17 @@
           </div>
           <div class="profile" v-if="twitter">
             <!-- tabs nav -->
-            <ul
-              class="nav nav-tabs profile__tabs"
-              id="profile__tabs"
-              role="tablist"
-            >
+            <ul class="nav nav-tabs profile__tabs" id="profile__tabs" role="tablist">
               <li class="nav-item" @click="selected = 'created'">
-                <a
-                  class="nav-link active"
-                  data-toggle="tab"
-                  href="#tab-1"
-                  role="tab"
-                  aria-controls="tab-1"
-                  aria-selected="true"
-                  >Created</a
-                >
+                <a :class="(selected=='created')? 'nav-link active' : 'nav-link'">Created</a>
               </li>
 
               <li class="nav-item" @click="selected = 'saved'">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-2"
-                  role="tab"
-                  aria-controls="tab-2"
-                  aria-selected="false"
-                  >Saved</a
-                >
+                <a :class="(selected=='saved')? 'nav-link active' : 'nav-link'">Saved</a>
               </li>
 
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-3"
-                  role="tab"
-                  aria-controls="tab-3"
-                  aria-selected="false"
-                  >My Activity</a
-                >
+              <li class="nav-item" @click="selected = 'activity'">
+                <a :class="(selected=='activity')? 'nav-link active' : 'nav-link'">My Activity</a>
               </li>
             </ul>
             <!-- end tabs nav -->
@@ -67,45 +38,17 @@
           <!-- Profile NOT verified-->
           <div class="profile" v-if="!twitter" id="ProfileNotVerified">
             <!-- tabs nav -->
-            <ul
-              class="nav nav-tabs profile__tabs"
-              id="profile__tabs"
-              role="tablist"
-            >
+            <ul class="nav nav-tabs profile__tabs" id="profile__tabs" role="tablist">
               <li class="nav-item" @click="selected = 'created'">
-                <a
-                  class="nav-link active"
-                  data-toggle="tab"
-                  href="#tab-1"
-                  role="tab"
-                  aria-controls="tab-1"
-                  aria-selected="true"
-                  >Created</a
-                >
+                <a :class="(selected=='created')? 'nav-link active' : 'nav-link'">Created</a>
               </li>
 
               <li class="nav-item" @click="selected = 'saved'">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-2"
-                  role="tab"
-                  aria-controls="tab-2"
-                  aria-selected="false"
-                  >Saved</a
-                >
+                <a :class="(selected=='saved')? 'nav-link active' : 'nav-link'">Saved</a>
               </li>
 
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  data-toggle="tab"
-                  href="#tab-3"
-                  role="tab"
-                  aria-controls="tab-3"
-                  aria-selected="false"
-                  >My Activity</a
-                >
+              <li class="nav-item" @click="selected = 'activity'">
+                <a :class="(selected=='activity')? 'nav-link active' : 'nav-link'">My Activity</a>
               </li>
             </ul>
             <!-- end tabs nav -->
@@ -114,36 +57,46 @@
           <!-- content tabs -->
           <div class="tab-content" v-if="twitter">
 
-            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='created'">
+            <div :class="(selected == 'created') ? 'tab-pane fade show active' : 'tab-pane fade'"
+              v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
+                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">You have not created any articles yet</h3>
-                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto" @click="() => $router.push({name:'Create'})">Create a new one</button>                
+                  <button class="author__follow"
+                    style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto"
+                    @click="() => $router.push({name:'Create'})">Create a new one</button>
                 </div>
               </div>
               <Paginator v-if="articles.length > 3"></Paginator>
             </div>
 
-            <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='saved'">
+            <div :class="(selected == 'saved') ? 'tab-pane fade show active' : 'tab-pane fade'"
+              v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
+                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">There are no saved articles</h3>
-                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px" @click="() => $router.push({name:'Explore'})">Go to collection</button>                  
+                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px"
+                    @click="() => $router.push({name:'Explore'})">Go to collection</button>
                 </div>
               </div>
               <Paginator v-if="articles.length > 3"></Paginator>
             </div>
 
-            <div class="tab-pane fade" id="tab-3" role="tabpanel">
+            <div :class="(selected == 'activity') ? 'tab-pane fade show active' : 'tab-pane fade'"
+              v-show="selected=='activity'">
               <div class="row">
                 <!-- content -->
-                <div class="col-12">
+                <div class="col-12" id="lalala">
                   <div class="row row--grid">
                     <div class="col-12">
                       <Activity></Activity>
@@ -152,14 +105,8 @@
 
                   <div class="row row--grid">
                     <div class="col-12">
-                      <button
-                        class="main__load"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#collapsemore1"
-                        aria-expanded="false"
-                        aria-controls="collapsemore1"
-                      >
+                      <button class="main__load" type="button" data-toggle="collapse" data-target="#collapsemore1"
+                        aria-expanded="false" aria-controls="collapsemore1">
                         Load more
                       </button>
                     </div>
@@ -173,7 +120,8 @@
           <div class="tab-content row flex-column" v-if="!twitter">
             <div class="mx-auto">
               <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
-              <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
+              <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px"
+                href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
             </div>
           </div>
           <!-- end content tabs -->
@@ -186,7 +134,7 @@
 <style lang="css" scoped>
   #ProfileNotVerified {overflow:hidden;}
   #ProfileNotVerified ul::after{content: ''; position: absolute; top: 0;bottom: 0; right: 0; left: 0; background: rgb(22 21 26 / 67%); z-index: 1;}
-
+  .nav-item {cursor:pointer}
 </style>
 
 <script>
@@ -204,7 +152,7 @@ export default {
       account: "",
       verified: false,
       twitter: false,
-      user: {articlesSaved:[]},
+      user: {articles_saved:[]},
       auth_token: '',
       articles: [],
       articlesSaved: [],
@@ -212,7 +160,7 @@ export default {
       users: []
     };
   },
-  props: ['oauth_token', 'screen_name'],
+  props: ['oauth_token', 'screen_name', 'section'],
   components: {
     AuthorDetails,
     ArticlePreview,
@@ -327,7 +275,14 @@ export default {
     await this.twitterLogin()
     await this.getUsers()
     if(this.twitter) await this.getArticles()
-    
+    //Initialize section
+    if(this.section != undefined) {
+      if(this.section == 'activity' || this.section == 'created' || this.section == 'saved' || this.section == 'settings') {
+        this.selected = this.section
+      }
+    }
+    setInterval(()=> {console.log(this.articlesSaved)},1000)
+
   },
 };
 </script>

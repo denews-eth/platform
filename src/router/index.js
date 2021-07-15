@@ -42,9 +42,10 @@ const routes = [
     props: true
   },
   {
-    path: '/author',
+    path: '/profile/:section?',
     name: 'Author',
     component: Author,
+    props:true
   },
   {
     path: '/explore',
