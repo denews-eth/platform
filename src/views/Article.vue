@@ -2,8 +2,8 @@
 <div class="container">
   <div class="row row--grid">
     <Breadcrumb :links="[{link:'/', name:'Home', active:false}, {link:'/article/'+article._id, name:'Article', active:true}]"></Breadcrumb>
-    <ArticleBlog></ArticleBlog>
-    <ArticleSidebar></ArticleSidebar>
+    <ArticleBlog :article="article"></ArticleBlog>
+    <ArticleSidebar v-if="false"></ArticleSidebar>
     <div class="col-12 col-xl-8">
       <Comments></Comments>
     </div>

@@ -19,27 +19,27 @@
               id="profile__tabs"
               role="tablist"
             >
-              <li class="nav-item" @click="selected = 'saved'">
-                <a
-                  :class="(selected=='saved')? 'nav-link active' : 'nav-link'"
-                  data-toggle="tab"
-                  role="tab"
-                  aria-controls="tab-1"
-                  aria-selected="true"
-                  style="cursor:pointer"
-                  >Saved</a
-                >
-              </li>
-
               <li class="nav-item" @click="selected = 'created'">
                 <a
                   :class="(selected=='created')? 'nav-link active' : 'nav-link'"
                   data-toggle="tab"
                   role="tab"
+                  aria-controls="tab-1"
+                  aria-selected="true"
+                  style="cursor:pointer"
+                  >Created</a
+                >
+              </li>
+
+              <li class="nav-item" @click="selected = 'saved'">
+                <a
+                  :class="(selected=='saved')? 'nav-link active' : 'nav-link'"
+                  data-toggle="tab"
+                  role="tab"
                   aria-controls="tab-2"
                   aria-selected="false"
                   style="cursor:pointer"
-                  >Created</a
+                  >Saved</a
                 >
               </li>
 
@@ -63,24 +63,7 @@
           <!-- content tabs -->
           <div class="tab-content">
 
-            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
-              <div class="row row--grid">
-                <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
-                  <ArticlePreview 
-                    :article="article" 
-                    :author_image="search(article.author, users).profile_image_url" 
-                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" 
-                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
-                </div>
-                <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
-                  <h3 style="color:lightgray">There are no saved articles</h3>
-                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px" @click="() => $router.push({name:'Explore'})">Go to collection</button>                  
-                </div>
-              </div>
-              <Paginator v-if="articlesSaved.length > 3"></Paginator>
-            </div>
-
-            <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='created'">
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
                   <ArticlePreview 
@@ -91,10 +74,27 @@
                 </div>
                 <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">You have not created any articles yet</h3>
-                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto" @click="() => $router.push({name:'Create'})">Create a new one</button>                  
+                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto" @click="() => $router.push({name:'Create'})">Create a new one</button>                 
                 </div>
               </div>
               <Paginator v-if="articles.length > 3"></Paginator>
+            </div>
+
+            <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='saved'">
+              <div class="row row--grid">
+                <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
+                  <ArticlePreview 
+                    :article="article" 
+                    :author_image="search(article.author, users).profile_image_url" 
+                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" 
+                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                </div>
+                <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">There are no saved articles</h3>
+                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px" @click="() => $router.push({name:'Explore'})">Go to collection</button>                
+                </div>
+              </div>
+              <Paginator v-if="articlesSaved.length > 3"></Paginator>
             </div>
 
             <div class="tab-pane fade" id="tab-3" role="tabpanel">
@@ -154,7 +154,7 @@ export default {
       oauth_token: '',
       articles: [],
       articlesSaved: [],
-      selected: 'saved',
+      selected: 'created',
       users: []
     };
   },
@@ -218,6 +218,7 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
+          if(res.data.error == true) return
         }
       }
       else {

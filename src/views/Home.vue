@@ -121,6 +121,7 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
+          if(res.data.error == true) return
         }
         else {
           this.user.articles_saved.push(hash)
@@ -129,6 +130,7 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
+          if(res.data.error == true) return
         }
       }
       else {

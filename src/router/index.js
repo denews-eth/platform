@@ -1,4 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
 import Home from '../views/Home.vue'
 import Authors from '../views/Authors.vue'
 import Author from '../views/Author.vue'
@@ -12,6 +14,9 @@ import PrivacyPolicy from '../views/PrivacyPolicy.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import Verify from '../views/Verify.vue'
 import PublicAuthor from '../views/PublicAuthor.vue'
+
+
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -90,8 +95,9 @@ const routes = [
   // }
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes
 })
 
