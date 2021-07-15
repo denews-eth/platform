@@ -121,7 +121,6 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
-          console.log(res.data)
         }
         else {
           this.user.articles_saved.push(hash)
@@ -158,4 +157,5 @@ export default {
 
   }
 }
+
 </script>

@@ -66,7 +66,11 @@
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview 
+                    :article="article" 
+                    :author_image="search(article.author, users).profile_image_url" 
+                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" 
+                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">There are no saved articles</h3>
@@ -79,7 +83,11 @@
             <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview 
+                    :article="article" 
+                    :author_image="search(article.author, users).profile_image_url" 
+                    v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" 
+                    :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">You have not created any articles yet</h3>
@@ -136,13 +144,13 @@ import Activity from "@/components/Activity.vue";
 import axios from 'axios'
 
 export default {
-  name: "Author",
+  name: "PublicAuthor",
   data() {
     return {
       account: "",
       verified: false,
       twitter: false,
-      user: {articlesSaved:[]},
+      user: {articles_saved:[]},
       oauth_token: '',
       articles: [],
       articlesSaved: [],
@@ -164,10 +172,10 @@ export default {
       let res2 = await axios.post('/articles/saved', {hash: this.user.articles_saved } )
       this.articlesSaved = res2.data
     },
-    async editProfile(hash, saved) {
-      if(this.oauth_token !== '') {
+    async editProfile(article, saved) {
+      if(this.oauth_token !== "") {
         if(saved == true) {
-          this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
+          this.user.articles_saved[this.user.articles_saved.indexOf(article.hash)] = undefined
           let i = 0;
           let j = 0;
           let temp = this.user.articles_saved
@@ -185,9 +193,26 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
+          if(res.data.error == true) return
+          else {
+            //Remove from render elements
+            this.articlesSaved[this.articlesSaved.findIndex( ({ hash }) => hash === article.hash )] = undefined
+            let i2 = 0;
+            let j2 = 0;
+            let temp2 = this.articlesSaved
+            this.articlesSaved = []
+            temp2.forEach(el => {
+              if(el != null) {
+                this.articlesSaved[j2] = temp2[i2]
+                j2++
+              }
+              i2++
+            });
+          }
         }
         else {
-          this.user.articles_saved.push(hash)
+          this.user.articles_saved.push(article.hash)
+          this.articlesSaved.push(article)
           let res = await axios.post('/users/edit', {
             oauth_token: this.oauth_token,
             address: this.account,
@@ -225,11 +250,12 @@ export default {
     if(this.screen_name != undefined && this.screen_name != '') {
       let res = await axios.get('/users/profile/'+this.screen_name)
       this.user = res.data
-      console.log(this.user)
+      //User not found
+      if(res.data.error == true) this.$router.push({name:"PageNotFound", params: {catchAll: 'user-not-found'}})
     }
-    await this.getArticles()
+    this.getArticles()
     if(localStorage.getItem('oauth_token') !== null) this.oauth_token = localStorage.getItem('oauth_token')
-    await this.getUsers()
+    this.getUsers()
   },
 };
 </script>

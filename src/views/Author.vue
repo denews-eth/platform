@@ -117,7 +117,7 @@
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">There are no saved articles</h3>
@@ -130,7 +130,7 @@
             <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
+                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url" v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
                 <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">You have not created any articles yet</h3>
@@ -248,12 +248,10 @@ export default {
       let res2 = await axios.post('/articles/saved', {hash: this.user.articles_saved } )
       this.articlesSaved = res2.data
     },
-    async editProfile(hash, saved) {
-      console.log(hash)
-      console.log(saved)
+    async editProfile(article, saved) {
       if(this.oauth_token !== "") {
         if(saved == true) {
-          this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined
+          this.user.articles_saved[this.user.articles_saved.indexOf(article.hash)] = undefined
           let i = 0;
           let j = 0;
           let temp = this.user.articles_saved
@@ -271,11 +269,26 @@ export default {
             address: this.account,
             articles_saved: this.user.articles_saved
           })
-          console.log(this.user.articles_saved)
-          console.log(res.data)
+          if(res.data.error == true) return
+          else {
+            //Remove from render elements
+            this.articlesSaved[this.articlesSaved.findIndex( ({ hash }) => hash === article.hash )] = undefined
+            let i2 = 0;
+            let j2 = 0;
+            let temp2 = this.articlesSaved
+            this.articlesSaved = []
+            temp2.forEach(el => {
+              if(el != null) {
+                this.articlesSaved[j2] = temp2[i2]
+                j2++
+              }
+              i2++
+            });
+          }
         }
         else {
-          this.user.articles_saved.push(hash)
+          this.user.articles_saved.push(article.hash)
+          this.articlesSaved.push(article)
           let res = await axios.post('/users/edit', {
             oauth_token: this.auth_token,
             address: this.account,

@@ -78,7 +78,7 @@ const routes = [
     component: PrivacyPolicy
   },
   { path: '/login/:oauth_token', redirect: { name: 'Verify' }},
-  { path: "/:catchAll(.*)", component: PageNotFound }
+  { path: "/:catchAll(.*)", name:"PageNotFound", component: PageNotFound }
 
   // {
   //   path: '/about',
