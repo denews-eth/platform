@@ -170,7 +170,7 @@ export default {
           let res = await axios.post('/twitter/validate', {oauth_token: app.oauth_token})
           app.user = res.data.user
         }
-        //else location.href = '/'
+        else this.$router.push({name:'Home'})
       }
       else {
         app.auth_token = localStorage.oauth_token
@@ -244,7 +244,7 @@ export default {
         this.editSuccess = true
         localStorage.setItem('verified', "true")
         setTimeout(() => {this.$refs.check.classList.add('fadeCheck')}, 200)
-        setTimeout(() => {location.href = '/'}, 2000)
+        setTimeout(() => {this.$router.push({name:'Home'})}, 2000)
       }
     },
 		previewImage() {
@@ -272,13 +272,14 @@ export default {
     if ( connected !== null) {
       this.account = connected;
       if(localStorage.getItem('verified') === "true") {
-            //location.href = '/'
+            this.$router.push({name:'Home'})
       }
     } else {
-      location.href = "/";
+      this.$router.push({name:'Home'});
     }
 
     await this.twitterLogin()
+    setInterval(() => {if(localStorage.getItem('verified') == true) this.$router.push({name:'Author'})}, 200)
   }
 }
 </script>

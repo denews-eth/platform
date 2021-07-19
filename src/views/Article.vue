@@ -4,7 +4,7 @@
     <Breadcrumb :links="[{link:'/', name:'Home', active:false}, {link:'/article/'+article._id, name:'Article', active:true}]"></Breadcrumb>
     <ArticleBlog :article="article"></ArticleBlog>
     <ArticleSidebar v-if="false"></ArticleSidebar>
-    <div class="col-12 col-xl-8">
+    <div class="col-12 col-xl-12">
       <Comments></Comments>
     </div>
   </div>

@@ -101,6 +101,11 @@ export default {
       }
     },
     async editProfile(hash, saved) {
+      if(this.account.length < 1) {
+        document.querySelector('.loginModal').style.display = 'block'
+        setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
+        return
+      }
       if(this.oauth_token !== "") {
         if(saved == true) {
           this.user.articles_saved[this.user.articles_saved.indexOf(hash)] = undefined

@@ -58,7 +58,14 @@
 
 	</div>
 	<div class="row row--grid">
-		<AuthorPreview v-for="author in authors" :key="author.id" :author="author"></AuthorPreview>
+		<AuthorPreview 
+			v-for="author in authors" 
+			:key="author.id" 
+			:author="author" 
+			:followed="(Object.keys(user).length > 1) ? (user.followed_authors.indexOf(author.screen_name) != -1 && user.followed_authors[user.followed_authors.indexOf(author.screen_name)] != null) ? true : false : false" 
+			v-on:follow="follow(author.screen_name)"
+			v-on:unfollow="unfollow(author.screen_name)"
+			></AuthorPreview>
 	</div>
 
 
@@ -83,16 +90,100 @@ export default {
   },
 	data() {
 		return {
-			authors: []
+			authors: [],
+			twitter: false,
+			account: '',
+			oauth_token: '',
+			user: {}
 		}
 	},
 	methods: {
 		async getAuthors() {
 			let res = await axios.get('/users')
 			this.authors = res.data
+		},
+		async twitterLogin() {
+      if(localStorage.getItem('oauth_token') === null) {
+        this.twitter = false
+      }
+      else {
+        this.oauth_token = localStorage.oauth_token
+        let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token })
+        this.user = res.data.user
+        this.twitter = true
+      }
+    },
+		async follow(author) {
+			if(Object.keys(this.user).length > 1) {
+				let res = await axios.post('/users/follow', {
+					oauth_token: this.oauth_token,
+					address: this.account,
+					author: author
+				})
+				if(res.data.error == true) {
+					document.querySelector('.loginModal').style.display = 'block'
+					document.querySelector('.loginModal h3').innerText = res.data.message
+					setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
+				}
+				else {
+					this.user.followed_authors.push(author)
+					this.authors[this.authors.findIndex((el) => el.screen_name==author)].followers++
+				}
+			}
+			else {
+				document.querySelector('.loginModal').style.display = 'block'
+        setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
+			}
+			return
+		},
+		async unfollow(author) {
+			if(Object.keys(this.user).length > 1) {
+				let res = await axios.post('/users/unfollow', {
+					oauth_token: this.oauth_token,
+					address: this.account,
+					author: author
+				})
+				if(res.data.error == true) {
+					document.querySelector('.loginModal').style.display = 'block'
+					document.querySelector('.loginModal h3').innerText = res.data.message
+					setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
+				}
+				else {
+					this.user.followed_authors[this.user.followed_authors.findIndex((el) => el==author)] = null
+					let temp = this.user.followed_authors
+					this.user.followed_authors = []
+					let j=0
+					for(let i=0; i< temp.length; i++) {
+						if(temp[i] != null) {
+							this.user.followed_authors[j] = temp[i]
+							j++
+						}
+						i++
+					}
+					this.authors[this.authors.findIndex((el) => el.screen_name==author)].followers--
+				}
+			}
+			else {
+				document.querySelector('.loginModal').style.display = 'block'
+        setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
+			}
+			return
 		}
 	},
 	async mounted() {
+    const connected = localStorage.getItem("connected");
+    if (connected !== null) {
+      this.account = connected;
+    } else {
+      window.location.href = "/";
+    }
+    if(localStorage.getItem('oauth_token') !== null) {
+      this.oauth_token = localStorage.getItem('oauth_token')
+    }
+    if(localStorage.verified === "true") {
+      this.verified = true
+    }
+    await this.twitterLogin()
 		await this.getAuthors()
 	}
 }

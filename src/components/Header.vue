@@ -78,7 +78,7 @@
               <li>
                 <a
                   class="header__nav-link"
-                  v-on:click="$router.push({ name:'HowDoesItWork' })"
+                  v-on:click="$router.push({ name:'AboutUs' })"
                   role="button"
                   >How does it work?</a
                 >
@@ -136,8 +136,15 @@
             <div>
               <p
                 style="overflow: hidden; width: 150px; text-overflow: ellipsis"
+                v-if="!twitter"
               >
                 {{ account }}
+              </p>
+              <p
+                style="overflow: hidden; width: 150px; text-overflow: ellipsis"
+                v-if="twitter"
+              >
+                {{ user.screen_name }}
               </p>
               <span>{{ balance }} {{ ticker }}</span>
             </div>
@@ -243,7 +250,7 @@
 
 <script>
 export default {
-  props: ["account", "balance", "ticker", "user"],
+  props: ["account", "balance", "ticker", "user", "twitter"],
   name: "Header"
 };
 </script>

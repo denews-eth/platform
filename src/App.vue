@@ -1,4 +1,8 @@
 <template>
+<div>
+  <div class="loginModal">
+    <h3>Connetti Metamask e accedi con Twitter</h3>
+  </div>
   <main class="main">
     <Header
       v-on:connect="connect"
@@ -7,10 +11,13 @@
       :balance="balance"
       :ticker="selected_ticker"
       :user ="user"
+      :twitter="twitter"
     ></Header>
     <router-view />
     <Footer></Footer>
   </main>
+</div>
+
 </template>
 <style lang="css">
 html,
@@ -20,6 +27,17 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   overflow-x: hidden;
+}
+
+.loginModal {position: absolute;display:none;left: 50%;top: 50%; background: #1e1d24; color:rgb(192, 197, 206);z-index:999;transform: translate(-50%,-50%) scale(0); border-radius: 13px; box-shadow:1px 4px 25px rgba(0,0,0,.35); padding:50px; animation: fadeIn 2.4s ease-in-out infinite; animation-delay: .1s;}
+@media(max-width:767px) {
+  .loginModal{width:300px;}
+}
+@keyframes fadeIn {
+  0% {transform: translate(-50%,-50%) scale(0);}
+  10% {transform: translate(-50%,-50%) scale(1);}
+  90% {transform: translate(-50%,-50%) scale(1);}
+  100% {transform: translate(-50%,-50%) scale(0);}
 }
 </style>
 <script>
@@ -38,6 +56,7 @@ export default {
     return {
       account: "",
       web3: "",
+      twitter: false,
       balance: 0,
       selected_network: process.env.VUE_APP_CHAIN_ID,
       selected_ticker: process.env.VUE_APP_TICKER,
@@ -128,7 +147,12 @@ export default {
         oauth_token: localStorage.getItem('oauth_token'),
         address: localStorage.getItem('connected')
         })
-      if(res.data.error == true) {return;}
+      if(res.data.error == true) {
+        localStorage.removeItem('oauth_token')
+        localStorage.removeItem('verified')
+        this.$router.push({name: 'Home'})
+        this.twitter = false
+      }
       else {
         this.user = res.data.user
         if(this.user.birth_date === null || this.user.name === null || this.user.surname === null || this.user.email === null || this.user.description === null || this.user.description === null || this.user.codice_fiscale === null || this.user.linkedin_profile_url === null) {
@@ -137,6 +161,7 @@ export default {
         else {
           localStorage.setItem('verified', "true")
         }
+        this.twitter = true
       }
     }
 
