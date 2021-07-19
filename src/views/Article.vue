@@ -37,7 +37,6 @@ export default {
     async getArticles() {
       let res = await axios.get('/articles/'+this.hash)
       this.article = res.data
-      console.log(res.data)
     }
   },
   async mounted() {

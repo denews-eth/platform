@@ -29,10 +29,11 @@
       </div>
       <div class="author__wrap">
         <div class="author__followers">
-          <p>3829</p>
+          <p v-html="user.followers"></p>
           <span>Followers</span>
         </div>
-        <button class="author__follow" type="button">Follow</button>
+        <button class="author__follow" type="button" @click="$emit('follow')" v-if="!followed && followed != 'invalid'">Follow</button>
+        <button class="author__follow" style="color:#999" type="button" @click="$emit('unfollow')" v-if="followed && followed != 'invalid'">Followed <i class="fa fa-check ml-1"></i></button>
       </div>
     </div>
     <div class="author__meta" v-if="!twitter">
@@ -56,6 +57,6 @@ export default {
       
     }
   },
-  props: ['twitter', 'account', 'user'],
+  props: ['twitter', 'account', 'user', 'followed']
 }
 </script>

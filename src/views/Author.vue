@@ -6,7 +6,7 @@
     <div class="container">
       <div class="row row--grid">
         <div class="col-12 col-xl-3">
-          <AuthorDetails :twitter="twitter" :account="account" :user="user"></AuthorDetails>
+          <AuthorDetails :twitter="twitter" :account="account" :user="user" :followed="'invalid'"></AuthorDetails>
         </div>
 
         <div class="col-12 col-xl-9">
@@ -267,7 +267,7 @@ export default {
       }
     },
     async getArticles() {
-      let res = await axios.post('/articles/search', {author:this.user.screen_name} )
+      let res = await axios.post('/articles/search', {query:this.user.screen_name} )
       this.articles = res.data
       let res2 = await axios.post('/articles/saved', {hash: this.user.articles_saved } )
       this.articlesSaved = res2.data

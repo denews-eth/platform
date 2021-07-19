@@ -62,7 +62,7 @@
 			v-for="author in authors" 
 			:key="author.id" 
 			:author="author" 
-			:followed="(Object.keys(user).length > 1) ? (user.followed_authors.indexOf(author.screen_name) != -1 && user.followed_authors[user.followed_authors.indexOf(author.screen_name)] != null) ? true : false : false" 
+			:followed="(Object.keys(loggedUser).length > 1) ? (loggedUser.screen_name != user.screen_name) ? (user.followed_authors.indexOf(author.screen_name) != -1 && user.followed_authors[user.followed_authors.indexOf(author.screen_name)] != null) ? true : false : 'invalid' : false" 
 			v-on:follow="follow(author.screen_name)"
 			v-on:unfollow="unfollow(author.screen_name)"
 			></AuthorPreview>

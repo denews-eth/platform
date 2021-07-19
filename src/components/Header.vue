@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="header__content">
-      <div class="header__logo">
+      <div class="header__logo" style="cursor:pointer">
         <a
           style="font-weight: bold; color: #fff; font-size: 30px"
           v-on:click="$router.push({ name: 'Home' })"
@@ -10,11 +10,21 @@
         </a>
       </div>
 
-      <form action="#" class="header__search">
+      <form @submit.prevent="false" class="header__search">
         <input
           type="text"
           placeholder="Search items, collections, and creators"
+          v-model="query"
+          @keyup.space="search()"
+          @keyup.enter="search()"
         />
+        <div class="results" v-if="results.length > 0">
+          <i class="fa fa-spinner mx-auto" v-if="loading"></i>
+          <div v-for="el in results" :key="el" class="result" @click="() => $router.push({name:'Article', params: {hash:el.hash}})">
+            <img :src="el.image" style="max-width:90px;object-fit:contain" class="ml-0 p-1">
+            <div class="p-2" v-html="el.name"></div>
+          </div>
+        </div>
         <button type="button">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
@@ -22,7 +32,7 @@
             ></path>
           </svg>
         </button>
-        <button type="button" class="close">
+        <button type="button" class="close" @click="removeResults()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M13.41,12l6.3-6.29a1,1,0,1,0-1.42-1.42L12,10.59,5.71,4.29A1,1,0,0,0,4.29,5.71L10.59,12l-6.3,6.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0L12,13.41l6.29,6.3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z"
@@ -114,7 +124,7 @@
 
       <div class="header__actions">
         <div class="header__action header__action--search">
-          <button class="header__action-btn" type="button">
+          <button class="header__action-btn" type="button" @click="showResults()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path
                 d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"
@@ -246,11 +256,43 @@
     color:#eeedfd!important;
     cursor:pointer;
   }
+  .results {background:#222227;display:flex;flex-direction:column;border-radius:0 0 12px 12px; color:white; padding:40px 10px 10px 10px; height:230px; position:absolute; left:0; right:0; margin-top:248px}
+  .result {margin:4px 0;display:flex;cursor: pointer; justify-content:start;background: #1d1d21;border-radius: 12px;padding: 5px 10px; transition: all .2s;}
+  .result:hover {background: #3b3b42;}
+  @media(max-width:767px) {
+    .results {width: 84vw;
+    margin-left: 4vw;}
+  }
 </style>
 
 <script>
+import axios from 'axios'
 export default {
   props: ["account", "balance", "ticker", "user", "twitter"],
-  name: "Header"
+  name: "Header",
+  data() {
+    return {
+      query: '',
+      results: [],
+      loading: false
+    }
+  },
+  methods: {
+    async search() {
+      if(this.query.length > 3) {
+        this.loading = true
+        let res = await axios.post('/articles/search', {query: this.query})
+        this.results = res.data
+        this.loading = false
+      }
+      return
+    },
+    showResults() {
+      document.querySelector('.results').style.display = 'inherit'
+    },
+    removeResults() {
+      document.querySelector('.results').style.display = 'none'
+    }
+  }
 };
 </script>
