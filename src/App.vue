@@ -35,8 +35,8 @@ body {
 }
 @keyframes fadeIn {
   0% {transform: translate(-50%,-50%) scale(0);}
-  10% {transform: translate(-50%,-50%) scale(1);}
-  90% {transform: translate(-50%,-50%) scale(1);}
+  4% {transform: translate(-50%,-50%) scale(1);}
+  96% {transform: translate(-50%,-50%) scale(1);}
   100% {transform: translate(-50%,-50%) scale(0);}
 }
 </style>
@@ -105,7 +105,7 @@ export default {
     },
     async switchNetwork() {
       const app = this;
-      if(process.env.VUE_APP_NETWORK === 'mumbai') {
+      if(process.env.VUE_APP_NETWORK === 'polygon') {
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
@@ -119,6 +119,24 @@ export default {
                 decimals: 18,
               },
               blockExplorerUrls: ["https://polygonscan.com/"],
+            },
+          ],
+        });
+      }
+      else if(process.env.VUE_APP_NETWORK === 'mumbai') {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x13881",
+              chainName: "Mumbai",
+              rpcUrls: ["https://rpc-mumbai.matic.today"],
+              nativeCurrency: {
+                name: "MATIC",
+                symbol: "MATIC",
+                decimals: 18,
+              },
+              blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             },
           ],
         });

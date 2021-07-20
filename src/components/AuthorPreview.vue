@@ -11,8 +11,8 @@
         <div class="author__followers">
           <p v-html="author.followers"></p><span>Followers</span>
         </div>
-        <button class="author__follow" type="button" @click="$emit('follow')" v-if="!followed">Follow</button>
-        <button class="author__follow" style="color:#999" type="button" @click="$emit('unfollow')" v-if="followed">Followed <i class="fa fa-check ml-1"></i></button>
+        <button class="author__follow" type="button" @click="$emit('follow')" v-if="!followed && followed != 'invalid'">Follow</button>
+        <button class="author__follow" style="color:#999" type="button" @click="$emit('unfollow')" v-if="followed && followed != 'invalid'">Followed <i class="fa fa-check ml-1"></i></button>
       </div>
     </div>
   </div>

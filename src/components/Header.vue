@@ -4,13 +4,13 @@
       <div class="header__logo" style="cursor:pointer">
         <a
           style="font-weight: bold; color: #fff; font-size: 30px"
-          v-on:click="$router.push({ name: 'Home' })"
+          v-on:click="$router.push({ name: 'Home' }).catch(()=>{})"
         >
           deNews
         </a>
       </div>
 
-      <form @submit.prevent="false" class="header__search">
+      <form @submit.prevent="" class="header__search">
         <input
           type="text"
           placeholder="Search items, collections, and creators"
@@ -20,7 +20,7 @@
         />
         <div class="results" v-if="results.length > 0">
           <i class="fa fa-spinner mx-auto" v-if="loading"></i>
-          <div v-for="el in results" :key="el" class="result" @click="() => $router.push({name:'Article', params: {hash:el.hash}})">
+          <div v-for="el in results" :key="el.hash" class="result" @click="() => $router.push({name:'Article', params: {hash:el.hash}}).catch(()=>{}).catch(()=>{})">
             <img :src="el.image" style="max-width:90px;object-fit:contain" class="ml-0 p-1">
             <div class="p-2" v-html="el.name"></div>
           </div>
@@ -46,7 +46,7 @@
           <li class="header__nav-item">
             <a
               class="header__nav-link"
-              v-on:click="$router.push({ name:'Home' })"
+              v-on:click="$router.push({ name:'Home' }).catch(()=>{})"
               role="button"
               >Home
             </a>
@@ -54,7 +54,7 @@
           <li class="header__nav-item">
             <a
               class="header__nav-link"
-              v-on:click="$router.push({ name: 'Explore'})"
+              v-on:click="$router.push({ name: 'Explore'}).catch(()=>{})"
               role="button"
               >Explore
             </a>
@@ -62,7 +62,7 @@
           <li class="header__nav-item">
             <a
               class="header__nav-link"
-              v-on:click="$router.push({ name:'Authors' })"
+              v-on:click="$router.push({ name:'Authors' }).catch(()=>{})"
               role="button"
               >Authors
             </a>
@@ -88,7 +88,7 @@
               <li>
                 <a
                   class="header__nav-link"
-                  v-on:click="$router.push({ name:'AboutUs' })"
+                  v-on:click="$router.push({ name:'AboutUs' }).catch(()=>{})"
                   role="button"
                   >How does it work?</a
                 >
@@ -97,14 +97,14 @@
                 <a
                   class="header__nav-link"
                   role="button"
-                  v-on:click="$router.push({ name:'HelpCenter' })"
+                  v-on:click="$router.push({ name:'HelpCenter' }).catch(()=>{})"
                   >Help center</a
                 >
               </li>
               <li>
                 <a
                   class="header__nav-link"
-                  v-on:click="$router.push({ name: 'Contacts' })"
+                  v-on:click="$router.push({ name: 'Contacts' }).catch(()=>{})"
                   role="button"
                   >Contacts</a
                 >
@@ -112,7 +112,7 @@
               <li>
                 <a
                   class="header__nav-link"
-                  v-on:click="$router.push({ name:'PrivacyPolicy' })"
+                  v-on:click="$router.push({ name:'PrivacyPolicy' }).catch(()=>{})"
                   role="button"
                   >Privacy Policy</a
                 >
@@ -142,7 +142,7 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <img :src="user.profile_image_url" alt="" />
+            <img :src="(user.profile_image_url != null) ? user.profile_image_url : '/img/avatars/avatar.jpg'" alt="" />
             <div>
               <p
                 style="overflow: hidden; width: 150px; text-overflow: ellipsis"
@@ -170,7 +170,7 @@
             aria-labelledby="dropdownMenuProfile"
           >
             <li>
-              <a  v-on:click="$router.push({ name:'Author' })"
+              <a  v-on:click="$router.push({ name:'Author' }).catch(()=>{})"
                 ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"
@@ -180,7 +180,7 @@
               >
             </li>
             <li>
-              <a  v-on:click="$router.push({ name:'Author', params: {section:'activity'} })"
+              <a  v-on:click="$router.push({ name:'Author', params: {section:'activity'} }).catch(()=>{})"
                 ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M3.71,16.29a1,1,0,0,0-.33-.21,1,1,0,0,0-.76,0,1,1,0,0,0-.33.21,1,1,0,0,0-.21.33,1,1,0,0,0,.21,1.09,1.15,1.15,0,0,0,.33.21.94.94,0,0,0,.76,0,1.15,1.15,0,0,0,.33-.21,1,1,0,0,0,.21-1.09A1,1,0,0,0,3.71,16.29ZM7,8H21a1,1,0,0,0,0-2H7A1,1,0,0,0,7,8ZM3.71,11.29a1,1,0,0,0-1.09-.21,1.15,1.15,0,0,0-.33.21,1,1,0,0,0-.21.33.94.94,0,0,0,0,.76,1.15,1.15,0,0,0,.21.33,1.15,1.15,0,0,0,.33.21.94.94,0,0,0,.76,0,1.15,1.15,0,0,0,.33-.21,1.15,1.15,0,0,0,.21-.33.94.94,0,0,0,0-.76A1,1,0,0,0,3.71,11.29ZM21,11H7a1,1,0,0,0,0,2H21a1,1,0,0,0,0-2ZM3.71,6.29a1,1,0,0,0-.33-.21,1,1,0,0,0-1.09.21,1.15,1.15,0,0,0-.21.33.94.94,0,0,0,0,.76,1.15,1.15,0,0,0,.21.33,1.15,1.15,0,0,0,.33.21,1,1,0,0,0,1.09-.21,1.15,1.15,0,0,0,.21-.33.94.94,0,0,0,0-.76A1.15,1.15,0,0,0,3.71,6.29ZM21,16H7a1,1,0,0,0,0,2H21a1,1,0,0,0,0-2Z"
@@ -190,7 +190,7 @@
               >
             </li>
             <li>
-              <a  v-on:click="$router.push({ path: '/create' })"
+              <a  v-on:click="$router.push({ name: 'Create' }).catch(()=>{})"
                 ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M10,13H4a1,1,0,0,0-1,1v6a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V14A1,1,0,0,0,10,13ZM9,19H5V15H9ZM20,3H14a1,1,0,0,0-1,1v6a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V4A1,1,0,0,0,20,3ZM19,9H15V5h4Zm1,7H18V14a1,1,0,0,0-2,0v2H14a1,1,0,0,0,0,2h2v2a1,1,0,0,0,2,0V18h2a1,1,0,0,0,0-2ZM10,3H4A1,1,0,0,0,3,4v6a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V4A1,1,0,0,0,10,3ZM9,9H5V5H9Z"
@@ -200,7 +200,7 @@
               >
             </li>
             <li>
-              <a  v-on:click="$router.push({ path: '/author' })"
+              <a  v-on:click="$router.push({ name: 'Author' }).catch(()=>{})"
                 ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M19.9,12.66a1,1,0,0,1,0-1.32L21.18,9.9a1,1,0,0,0,.12-1.17l-2-3.46a1,1,0,0,0-1.07-.48l-1.88.38a1,1,0,0,1-1.15-.66l-.61-1.83A1,1,0,0,0,13.64,2h-4a1,1,0,0,0-1,.68L8.08,4.51a1,1,0,0,1-1.15.66L5,4.79A1,1,0,0,0,4,5.27L2,8.73A1,1,0,0,0,2.1,9.9l1.27,1.44a1,1,0,0,1,0,1.32L2.1,14.1A1,1,0,0,0,2,15.27l2,3.46a1,1,0,0,0,1.07.48l1.88-.38a1,1,0,0,1,1.15.66l.61,1.83a1,1,0,0,0,1,.68h4a1,1,0,0,0,.95-.68l.61-1.83a1,1,0,0,1,1.15-.66l1.88.38a1,1,0,0,0,1.07-.48l2-3.46a1,1,0,0,0-.12-1.17ZM18.41,14l.8.9-1.28,2.22-1.18-.24a3,3,0,0,0-3.45,2L12.92,20H10.36L10,18.86a3,3,0,0,0-3.45-2l-1.18.24L4.07,14.89l.8-.9a3,3,0,0,0,0-4l-.8-.9L5.35,6.89l1.18.24a3,3,0,0,0,3.45-2L10.36,4h2.56l.38,1.14a3,3,0,0,0,3.45,2l1.18-.24,1.28,2.22-.8.9A3,3,0,0,0,18.41,14ZM11.64,8a4,4,0,1,0,4,4A4,4,0,0,0,11.64,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,11.64,14Z"

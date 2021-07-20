@@ -69,7 +69,7 @@
               v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                  <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''"
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
@@ -87,7 +87,7 @@
               v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.hash">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                  <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''"
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
@@ -130,7 +130,7 @@
 							<div class="row row--grid">
 								<!-- details form -->
 								<div class="col-12">
-									<form @submit.prevent="false" class="sign__form sign__form--profile">
+									<form @submit.prevent="" class="sign__form sign__form--profile">
 										<div class="row">
 											<div class="col-12">
 												<h4 class="sign__title">Profile details</h4>

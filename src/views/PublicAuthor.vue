@@ -46,7 +46,7 @@
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                  <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''"
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
@@ -63,7 +63,7 @@
             <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='saved'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articlesSaved" :key="article.tokenId">
-                  <ArticlePreview :article="article" :author_image="search(article.author, users).profile_image_url"
+                  <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''"
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
@@ -273,7 +273,10 @@ export default {
           this.auth_token = this.oauth_token
           this.twitter = true
           let res = await axios.post('/twitter/validate', {oauth_token: this.oauth_token})
-          this.loggedUser = res.data.user
+          if(res.data.error == true) 
+            return
+          else 
+            this.loggedUser = res.data.user
         }
         else {
           this.twitter = false
@@ -285,13 +288,32 @@ export default {
       else {
         this.auth_token = localStorage.oauth_token
         let res = await axios.post('/twitter/validate', {oauth_token: this.auth_token})
-        this.loggedUser = res.data.user
-        this.twitter = true
+        if(res.data.error == true) 
+          return
+        else {
+          this.loggedUser = res.data.user
+          this.twitter = true
+        }
       }
     },
     async getUsers() {
       let res = await axios.get('/users') 
       this.users = res.data
+    }
+  },
+  watch: {
+    '$route' (to) {
+      if(to.params.screen_name != undefined && to.params.screen_name != '') {
+        axios.get('/users/profile/'+to.params.screen_name)
+        .then(res => {
+          //User not found
+          if(res.data.error == true) 
+            this.$router.push({name:"PageNotFound", params: {catchAll: 'user-not-found'}})
+          //User found
+          else
+            this.user = res.data
+        })
+      }
     }
   },
   async mounted() {

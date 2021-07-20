@@ -8,7 +8,7 @@
       <h2 class="author__nickname"><a href="author.html">@{{user.screen_name}}</a></h2>
       <p class="author__text">{{user.description}}</p>
       <div class="author__code">
-        <input type="text" :value="account" id="author-code">
+        <input type="text" :value="(account != null) ? account : 'https://twitter.com/'+user.screen_name" id="author-code">
         <button type="button">
           <span>Copied</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -18,11 +18,14 @@
           </svg>
         </button>
       </div>
-      <a href="#" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:20px; fill:lightblue;margin:10px 4px">
+      <a :href="'https://twitter.com/'+user.screen_name" target="_blank" style="width:100%">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:20px; fill:lightblue;display:block;float:left;margin:10px 4px">
             <path
               d="M22,5.8a8.49,8.49,0,0,1-2.36.64,4.13,4.13,0,0,0,1.81-2.27,8.21,8.21,0,0,1-2.61,1,4.1,4.1,0,0,0-7,3.74A11.64,11.64,0,0,1,3.39,4.62a4.16,4.16,0,0,0-.55,2.07A4.09,4.09,0,0,0,4.66,10.1,4.05,4.05,0,0,1,2.8,9.59v.05a4.1,4.1,0,0,0,3.3,4A3.93,3.93,0,0,1,5,13.81a4.9,4.9,0,0,1-.77-.07,4.11,4.11,0,0,0,3.83,2.84A8.22,8.22,0,0,1,3,18.34a7.93,7.93,0,0,1-1-.06,11.57,11.57,0,0,0,6.29,1.85A11.59,11.59,0,0,0,20,8.45c0-.17,0-.35,0-.53A8.43,8.43,0,0,0,22,5.8Z">
             </path>
-          </svg>https://twitter.com/dfvcfdv</a>
+          </svg>
+          <p style="text-overflow: ellipsis;width: 80%; margin:8px 0 8px 8px; display:block;float:left;overflow: hidden;">https://twitter.com/{{user.screen_name}}</p>
+      </a>
       <div class="author__social">
 
         

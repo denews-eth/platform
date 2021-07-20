@@ -27,6 +27,12 @@ export default {
     ArticleSidebar,
     Comments
   },
+  watch: {
+    '$route' (to) {
+      this.hash = to.params.hash
+      this.getArticles()
+    }
+  },
   data() {
     return {
       article: {}

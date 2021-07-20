@@ -14,7 +14,7 @@
 
     <div class="row row--grid">
       <div class="col-12 col-lg-12 col-xl-9 mx-auto">
-        <form class="sign__form sign__form--contacts" @submit.prevent="false">
+        <form class="sign__form sign__form--contacts" @submit.prevent="">
           <div class="row">
             <div class="col-7 mx-auto col-md-3">
               <div class="mb-3" style="height:200px;">
@@ -279,7 +279,7 @@ export default {
     }
 
     await this.twitterLogin()
-    setInterval(() => {if(localStorage.getItem('verified') == true) this.$router.push({name:'Author'})}, 200)
+    setInterval(() => {if(localStorage.getItem('verified') == true) this.$router.push({name:'Author'})}, 500)
   }
 }
 </script>
