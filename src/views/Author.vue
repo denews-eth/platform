@@ -149,11 +149,13 @@
                     v-on:article_saved="
                       editProfile(
                         article,
-                        user.articles_saved.indexOf(article.hash) != -1
+                        (user.articles_saved !== undefined && user.articles_saved.indexOf(article.hash) != -1)
+                        ? true
+                        : false
                       )
                     "
                     :saved="
-                      user.articles_saved.indexOf(article.hash) != -1
+                      (user.articles_saved !== undefined && user.articles_saved.indexOf(article.hash) != -1)
                         ? true
                         : false
                     "
@@ -678,9 +680,14 @@ export default {
       }
       if (this.oauth_token !== "") {
         if (saved == true) {
-          this.user.articles_saved[
-            this.user.articles_saved.indexOf(article.hash)
-          ] = undefined;
+          let itSaved = false;
+          if (
+            this.users.articles_saved !== undefined &&
+            this.user.articles_saved.indexOf(article.hash) !== -1
+          ) {
+            itSaved = true;
+          }
+          this.user.articles_saved[itSaved] = undefined;
           let i = 0;
           let j = 0;
           let temp = this.user.articles_saved;
