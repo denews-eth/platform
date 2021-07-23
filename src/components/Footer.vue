@@ -3,27 +3,11 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-12 col-md-3 col-lg-4 col-xl-5 order-4 order-md-1 order-lg-4 order-xl-1">
-					<div class="footer__logo">
-						<img src="img/logo.svg" alt="">
-					</div> 
-					<p class="footer__tagline">Digital marketplace for crypto collectibles <br>and non-fungible tokens (NFTs). <br>Buy, sell, and discover exclusive digital assets.</p>
-
-					<div class="footer__lang">
-						<a class="footer__lang-btn" href="#" role="button" id="dropdownLang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="img/flags/uk.svg" alt="">
-							<span>English</span>
-						</a>
-
-						<ul class="dropdown-menu footer__lang-dropdown" aria-labelledby="dropdownLang">
-							<li><a href="#"><img src="img/flags/spain.svg" alt=""><span>Spanish</span></a></li>
-							<li><a href="#"><img src="img/flags/russia.svg" alt=""><span>Russian</span></a></li>
-							<li><a href="#"><img src="img/flags/china.svg" alt=""><span>Chinese</span></a></li>
-						</ul>
-					</div>
+					<img style="width:200px; margin-top:30px" src="img/logo.png" alt="">
 				</div>
 
 				<div class="col-6 col-md-3 col-lg-3 col-xl-3 order-1 order-md-1 order-lg-4 order-xl-1">
-					<h6 class="footer__title">NTF Marketplace</h6>
+					<h6 class="footer__title">deNEW</h6>
 					<div class="footer__nav">
 						<a href="/">Home</a>
 						<a href="/explore">Explore</a>
@@ -79,7 +63,7 @@
 							<a href="#" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,4H5A3,3,0,0,0,2,7V17a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm-.41,2-5.88,5.88a1,1,0,0,1-1.42,0L5.41,6ZM20,17a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V7.41l5.88,5.88a3,3,0,0,0,4.24,0L20,7.41Z"></path></svg></a>
 						</div>
 
-						<small class="footer__copyright">© Unitok, 2021. Created by <a href="https://themeforest.net/user/dmitryvolkov/portfolio" target="_blank">Dmitry Volkov</a>.</small>
+						<small class="footer__copyright">© deNews {{ new Date().getFullYear() }}.</small>
 					</div>
 				</div>
 			</div>

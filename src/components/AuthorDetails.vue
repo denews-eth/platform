@@ -46,7 +46,7 @@
       <h1 class="author__name" style="overflow: hidden;text-overflow: ellipsis;"><a href="/author">{{account}}</a></h1>
       <h2 class="author__nickname"><a href="author.html"></a></h2>
       <p class="author__text">
-        <a class="author__follow" type="button" style="width:100%!important" href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
+        <a class="author__follow" type="button" style="width:100%!important" :href="apiURL + '/twitter/login'">Accedi con Twitter</a>
       </p>
     </div>
   </div>
@@ -57,7 +57,7 @@ export default {
   name:"Author",
   data() {
     return {
-      
+      apiURL: process.env.VUE_APP_API_URL
     }
   },
   props: ['twitter', 'account', 'user', 'followed']

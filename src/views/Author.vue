@@ -174,7 +174,7 @@
             <div class="mx-auto">
               <h2 style="text-align:center; color:#cccccc; margin:20px 0 15px 0;">Profilo non verificato</h2>
               <a class="author__follow" type="button" style="padding:15px; margin:0 auto; width:200px"
-                href="http://localhost:3000/twitter/login">Accedi con Twitter</a>
+                :href="apiURL + '/twitter/login'">Accedi con Twitter</a>
             </div>
           </div>
           <!-- end content tabs -->
@@ -222,6 +222,7 @@ export default {
   name: "Author",
   data() {
     return {
+      apiURL: process.env.VUE_APP_API_URL,
       account: "",
       verified: false,
       twitter: false,
