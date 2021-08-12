@@ -32,47 +32,47 @@
             <label class="filter__label" style="text-transform:uppercase">Crypto</label>
             <ul class="filter__checkboxes" style="margin-left:15px">
               <li>
-                <input id="type5" type="checkbox" name="type5" checked="">
-                <label for="type5">All News</label>
+                <input id="type1" type="checkbox" name="type1" @change="updateFilter">
+                <label for="type1">All News</label>
               </li>
               <li>
-                <input id="type6" type="checkbox" name="type6">
-                <label for="type6">Business</label>
+                <input id="Business" type="checkbox" name="Business" @change="updateFilter">
+                <label for="Business">Business</label>
               </li>
               <li>
-                <input id="type7" type="checkbox" name="type7" checked="">
-                <label for="type7">Technology</label>
+                <input id="type3" type="checkbox" name="type3" @change="updateFilter">
+                <label for="type3">Technology</label>
               </li>
               <li>
-                <input id="type8" type="checkbox" name="type8" checked="">
-                <label for="type8">Coin</label>
+                <input id="type4" type="checkbox" name="type4" @change="updateFilter">
+                <label for="type4">Coin</label>
               </li>
               <li>
-                <input id="type9" type="checkbox" name="type9">
-                <label for="type9">Bitcoin</label>
+                <input id="type5" type="checkbox" name="type5" @change="updateFilter">
+                <label for="type5">Bitcoin</label>
               </li>
               <li>
-                <input id="type10" type="checkbox" name="type10">
-                <label for="type10">Ethereum</label>
+                <input id="type6" type="checkbox" name="type6" @change="updateFilter">
+                <label for="type6">Ethereum</label>
               </li>
               <li>
-                <input id="type11" type="checkbox" name="type11">
-                <label for="type11">NFTs</label>
+                <input id="type7" type="checkbox" name="type7" @change="updateFilter">
+                <label for="type7">NFTs</label>
               </li>
               <li>
-                <input id="type11" type="checkbox" name="type11">
-                <label for="type11">Market</label>
+                <input id="type8" type="checkbox" name="type8" @change="updateFilter">
+                <label for="type8">Market</label>
               </li>
               <li>
-                <input id="type11" type="checkbox" name="type11">
-                <label for="type11">People</label>
+                <input id="People" type="checkbox" name="People" @change="updateFilter">
+                <label for="People">People</label>
               </li>
               <li>
-                <input id="type11" type="checkbox" name="type11">
-                <label for="type11">Community</label>
+                <input id="type10" type="checkbox" name="type10" @change="updateFilter">
+                <label for="type10">Community</label>
               </li>
               <li>
-                <input id="type11" type="checkbox" name="type11">
+                <input id="type11" type="checkbox" name="type11" @change="updateFilter">
                 <label for="type11">Policy & Regulation</label>
               </li>
             </ul>
@@ -81,16 +81,16 @@
             <label class="filter__label" style="text-transform:uppercase">Blockchain</label>
             <ul class="filter__checkboxes" style="margin-left:15px">
               <li>
-                <input id="type5" type="checkbox" name="type5" checked="">
-                <label for="type5">Bitcoin</label>
+                <input id="type12" type="checkbox" name="type12" @change="updateFilter">
+                <label for="type12">Bitcoin</label>
               </li>
               <li>
-                <input id="type6" type="checkbox" name="type6">
-                <label for="type6">Ethereum</label>
+                <input id="type13" type="checkbox" name="type13" @change="updateFilter">
+                <label for="type13">Ethereum</label>
               </li>
               <li>
-                <input id="type7" type="checkbox" name="type7" checked="">
-                <label for="type7">Polygon</label>
+                <input id="type14" type="checkbox" name="type14" @change="updateFilter">
+                <label for="type14">Polygon</label>
               </li>
             </ul>
           </li>
@@ -98,8 +98,8 @@
             <label class="filter__label" style="text-transform:uppercase">Law</label>
             <ul class="filter__checkboxes" style="margin-left:15px">
               <li>
-                <input id="type5" type="checkbox" name="type5" checked="">
-                <label for="type5">...</label>
+                <input id="type15" type="checkbox" name="type15" @change="updateCategories(this)">
+                <label for="type15">...</label>
               </li>
             </ul>
           </li>
@@ -109,7 +109,7 @@
 
 
       <div class="filter__group">
-        <button class="filter__btn" type="button">APPLY FILTER</button>
+        <button class="filter__btn" type="button" @click="$emit('updateSearch')">APPLY FILTER</button>
       </div>
     </div>
     <!-- end filter -->
@@ -120,6 +120,18 @@
 
 <script>
 export default {
-  name:"Filter"
+  name:"ExploreFilter",
+  methods: {
+    updateFilter(value) {
+      if(value.target.checked) {
+        //Push in the list
+        this.$emit('pushCategory', value.target.name)
+      }
+      else {
+        //Remove
+        this.$emit('removeCategory', value.target.name)
+      }
+    }
+  }
 }
 </script>

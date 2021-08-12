@@ -15,7 +15,7 @@
   </div>
   <div class="row">
     <div class="col-12 col-xl-3 order-xl-2">
-      <Filter></Filter>
+      <ExploreFilter v-on:pushCategory="pushCategory" v-on:removeCategory="removeCategory" v-on:updateSearch="updateSearch"></ExploreFilter>
     </div>
     <div class="col-12 col-xl-9 order-xl-1">
       <div class="row row--grid">
@@ -47,7 +47,7 @@
 
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import Paginator from '@/components/Paginator.vue'
-import Filter from '@/components/Filter.vue'
+import ExploreFilter from '@/components/ExploreFilter.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 
 import axios from 'axios'
@@ -57,7 +57,7 @@ export default {
   components: {
     Paginator,
     ArticlePreview,
-    Filter,
+    ExploreFilter,
     Breadcrumb
   },
   data() {
@@ -69,7 +69,8 @@ export default {
       verified: false,
       twitter: false,
       articles: [],
-      users: []
+      users: [],
+      categories: []
     }
   },
   methods: {
@@ -143,6 +144,29 @@ export default {
     async getUsers() {
       let res = await axios.get('/users') 
       this.users = res.data
+    },
+    pushCategory(value) {
+      this.categories.push(value)
+    },
+    removeCategory(value) {
+      let temp = this.categories
+      this.categories = []
+      temp[temp.indexOf(value)] = undefined
+      let i = 0
+      temp.forEach( el => {
+        if(el != undefined) {
+          this.categories[i] = el
+          i++
+        }
+      })
+    },
+    async updateSearch() {
+      let res = await axios.post('/articles/search', {
+        categories: this.categories
+      })
+      if(res.data.error != true) {
+        this.articles = res.data
+      }
     }
   },
   async mounted() {

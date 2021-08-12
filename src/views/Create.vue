@@ -369,42 +369,44 @@ export default {
       }
     },
     async createArticle() {
-      this.loading = true;
+      if(!this.loading) {
+        this.loading = true;
 
-      let formData = new FormData();
-      formData.append(
-        "media",
-        document.getElementById("preview_image_upload").files[0]
-      );
-      formData.append("title", this.title);
-      formData.append("body", this.description);
-      formData.append("tag", JSON.stringify(this.tags.join()));
-      formData.append("intro", this.intro);
-      formData.append("author", this.user.screen_name);
-      let res = await axios.post("/articles/nft", formData);
-      console.log(res.data);
-
-      if (res.data.error == true) return;
-      else {
-        let web3 = new Web3(Web3.givenProvider);
-        let myContract = new web3.eth.Contract(
-          abi,
-          process.env.VUE_APP_CONTRACT_ADDRESS,
-          {
-            from: this.account,
-            gasPrice: web3.eth.gas_price,
-          }
+        let formData = new FormData();
+        formData.append(
+          "media",
+          document.getElementById("preview_image_upload").files[0]
         );
-        let awa = await myContract.methods
-          .mintNFT(res.data.nft.ipfs)
-          .send({ from: this.account });
-        console.log(awa.events.Transfer.returnValues.tokenId);
-        let awa2 = await myContract.methods
-          .returnTokenIdByHash(res.data.nft.ipfs)
-          .call();
-        console.log(awa2);
-        this.loading = false;
-        this.$router.push({ name: "Author" });
+        formData.append("title", this.title);
+        formData.append("body", this.description);
+        formData.append("tag", JSON.stringify(this.tags.join()));
+        formData.append("intro", this.intro);
+        formData.append("author", this.user.screen_name);
+        let res = await axios.post("/articles/nft", formData);
+        console.log(res.data);
+
+        if (res.data.error == true) return;
+        else {
+          let web3 = new Web3(Web3.givenProvider);
+          let myContract = new web3.eth.Contract(
+            abi,
+            process.env.VUE_APP_CONTRACT_ADDRESS,
+            {
+              from: this.account,
+              gasPrice: web3.eth.gas_price,
+            }
+          );
+          let awa = await myContract.methods
+            .mintNFT(res.data.nft.ipfs)
+            .send({ from: this.account });
+          console.log(awa.events.Transfer.returnValues.tokenId);
+          let awa2 = await myContract.methods
+            .returnTokenIdByHash(res.data.nft.ipfs)
+            .call();
+          console.log(awa2);
+          this.loading = false;
+          this.$router.push({ name: "Author" });
+        }
       }
     },
     previewImage() {

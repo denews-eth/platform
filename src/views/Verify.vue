@@ -94,7 +94,7 @@
               <i 
                 class="fa fa-times" 
                 style="color: red;float: left;font-size: 23px; opacity: 0; margin: 20px 0; transition:.2s" ref="times" v-if="!editSuccess"></i>
-              <a type="button" class="sign__btn" style="background:#222227;width:200px; float:left;" href="/author">Salta per adesso</a>
+              <a type="button" class="sign__btn" style="background:#222227;width:200px; float:left;" href="/profile">Salta per adesso</a>
             </div>
           </div>
         </form>
