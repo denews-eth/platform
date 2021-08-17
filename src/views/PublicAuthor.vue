@@ -20,12 +20,12 @@
           <div class="profile">
             <!-- tabs nav -->
             <ul class="nav nav-tabs profile__tabs" id="profile__tabs" role="tablist">
-              <li class="nav-item" @click="selected = 'created'">
+              <li class="nav-item" @click="selected = 'created'; currentPage = 1; getArticles()">
                 <a :class="(selected=='created')? 'nav-link active' : 'nav-link'" data-toggle="tab" role="tab"
                   aria-controls="tab-1" aria-selected="true" style="cursor:pointer">Created</a>
               </li>
 
-              <li class="nav-item" @click="selected = 'saved'">
+              <li class="nav-item" @click="selected = 'saved'; currentPage = 1; getSavedArticles()">
                 <a :class="(selected=='saved')? 'nav-link active' : 'nav-link'" data-toggle="tab" role="tab"
                   aria-controls="tab-2" aria-selected="false" style="cursor:pointer">Saved</a>
               </li>
@@ -42,7 +42,6 @@
 
           <!-- content tabs -->
           <div class="tab-content">
-
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" v-show="selected=='created'">
               <div class="row row--grid">
                 <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article.tokenId">
@@ -50,14 +49,14 @@
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
-                <div v-show="articles.length == 0" style="text-align:center; margin:20px auto;">
-                  <h3 style="color:lightgray">You have not created any articles yet</h3>
-                  <button class="author__follow"
-                    style="background:rgb(58 22 162);width:250px;height:50px; margin:0 auto"
-                    @click="() => $router.push({name:'Create'})">Create a new one</button>
+                <div v-show="articles.length == 0 && currentPage == 1" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">There are no created articles yet</h3>
+                </div>
+                <div v-show="articles.length == 0 && currentPage != 1" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">There are no created articles in this page</h3>
                 </div>
               </div>
-              <Paginator v-if="articles.length > 3"></Paginator>
+              <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
             </div>
 
             <div class="tab-pane fade show active" id="tab-2" role="tabpanel" v-show="selected=='saved'">
@@ -67,13 +66,14 @@
                     v-on:article_saved="editProfile(article, (user.articles_saved.indexOf(article.hash)!=-1))"
                     :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
                 </div>
-                <div v-show="articlesSaved.length == 0" style="text-align:center; margin:20px auto;">
+                <div v-show="articlesSaved.length == 0 && currentPage == 1" style="text-align:center; margin:20px auto;">
                   <h3 style="color:lightgray">There are no saved articles</h3>
-                  <button class="author__follow" style="background:rgb(58 22 162);width:250px;height:50px"
-                    @click="() => $router.push({name:'Explore'})">Go to collection</button>
+                </div>
+                <div v-show="articlesSaved.length == 0 && currentPage != 1" style="text-align:center; margin:20px auto;">
+                  <h3 style="color:lightgray">There are no saved articles in this page</h3>
                 </div>
               </div>
-              <Paginator v-if="articlesSaved.length > 3"></Paginator>
+              <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
             </div>
 
             <div class="tab-pane fade" id="tab-3" role="tabpanel">
@@ -129,7 +129,9 @@ export default {
       articlesSaved: [],
       selected: 'created',
       users: [],
-      loggedUser: {}
+      loggedUser: {},
+      currentPage: 1,
+      pages: 0
     };
   },
   props: ['screen_name'],
@@ -141,10 +143,20 @@ export default {
   },
   methods: {
     async getArticles() {
-      let res = await axios.post('/articles/search', {query:this.user.screen_name} )
-      this.articles = res.data
-      let res2 = await axios.post('/articles/saved', {hash: this.user.articles_saved } )
-      this.articlesSaved = res2.data
+      let res = await axios.post('/articles/author/'+this.currentPage, {author:this.user.screen_name} )
+      if(res.data.error != true) {
+        this.articles = res.data.articles
+        this.currentPage = res.data.current
+        this.pages = res.data.pages
+      }
+    },
+    async getSavedArticles() {
+      let res = await axios.post('/articles/saved/'+this.currentPage, {hash: this.user.articles_saved } )
+      if(res.data.error != true) {
+        this.articlesSaved = res.data.articles
+        this.currentPage = res.data.current
+        this.pages = res.data.pages
+      }
     },
     async editProfile(article, saved) {
       if(this.account.length < 1) {
@@ -294,6 +306,15 @@ export default {
           this.loggedUser = res.data.user
           this.twitter = true
         }
+      }
+    },
+    async changePage(value) {
+      this.currentPage = value
+      if(this.selected == 'created') {
+        this.getArticles()
+      }
+      else if(this.selected == 'saved') {
+        this.getSavedArticles()
       }
     },
     async getUsers() {

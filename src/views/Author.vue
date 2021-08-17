@@ -43,7 +43,7 @@
               id="profile__tabs"
               role="tablist"
             >
-              <li class="nav-item" @click="selected = 'created'">
+              <li class="nav-item" @click="selected = 'created'; currentPage = 1; getArticles()">
                 <a
                   :class="
                     selected == 'created' ? 'nav-link active' : 'nav-link'
@@ -52,13 +52,13 @@
                 >
               </li>
 
-              <li class="nav-item" @click="selected = 'saved'">
+              <li class="nav-item" @click="selected = 'saved'; currentPage = 1; getSavedArticles()">
                 <a :class="selected == 'saved' ? 'nav-link active' : 'nav-link'"
                   >Saved</a
                 >
               </li>
 
-              <li class="nav-item" @click="selected = 'activity'">
+              <li class="nav-item" @click="selected = 'activity'; currentPage = 1">
                 <a
                   :class="
                     selected == 'activity' ? 'nav-link active' : 'nav-link'
@@ -67,7 +67,7 @@
                 >
               </li>
 
-              <li class="nav-item" @click="selected = 'settings'">
+              <li class="nav-item" @click="selected = 'settings'; currentPage = 1">
                 <a
                   :class="
                     selected == 'settings' ? 'nav-link active' : 'nav-link'
@@ -162,7 +162,15 @@
                   ></ArticlePreview>
                 </div>
                 <div
-                  v-show="articles.length == 0"
+                  v-show="articles.length == 0 && currentPage != 1"
+                  style="text-align: center; margin: 20px auto"
+                >
+                  <h3 style="color: lightgray">
+                    There are no articles in this page
+                  </h3>
+                </div>
+                <div
+                  v-show="articles.length == 0 && currentPage == 1"
                   style="text-align: center; margin: 20px auto"
                 >
                   <h3 style="color: lightgray">
@@ -182,7 +190,7 @@
                   </button>
                 </div>
               </div>
-              <Paginator v-if="articles.length > 3"></Paginator>
+              <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
             </div>
 
             <div
@@ -220,7 +228,13 @@
                   ></ArticlePreview>
                 </div>
                 <div
-                  v-show="articlesSaved.length == 0"
+                  v-show="articlesSaved.length == 0 && currentPage != 1"
+                  style="text-align: center; margin: 20px auto"
+                >
+                  <h3 style="color: lightgray">There are no saved articles in this page</h3>
+                </div>
+                <div
+                  v-show="articlesSaved.length == 0 && currentPage == 1"
                   style="text-align: center; margin: 20px auto"
                 >
                   <h3 style="color: lightgray">There are no saved articles</h3>
@@ -237,7 +251,7 @@
                   </button>
                 </div>
               </div>
-              <Paginator v-if="articles.length > 3"></Paginator>
+              <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
             </div>
 
             <div
@@ -515,6 +529,8 @@ export default {
       preview_image: "",
       profile_banner: "",
       loading: false,
+      currentPage: 1,
+      pages: 0
     };
   },
   props: ["oauth_token", "screen_name", "section"],
@@ -550,14 +566,24 @@ export default {
       }
     },
     async getArticles() {
-      let res = await axios.post("/articles/author", {
+      let res = await axios.post("/articles/author/"+this.currentPage, {
         author: this.user.screen_name,
       });
-      this.articles = res.data;
-      let res2 = await axios.post("/articles/saved", {
+      if(res.data.error != true) {
+        this.articles = res.data.articles
+        this.currentPage = res.data.current
+        this.pages = res.data.pages
+      }
+    },
+    async getSavedArticles() {
+      let res = await axios.post("/articles/saved/"+this.currentPage, {
         hash: this.user.articles_saved,
       });
-      this.articlesSaved = res2.data;
+      if(res.data.error != true) {
+        this.articlesSaved = res.data.articles
+        this.currentPage = res.data.current 
+        this.pages = res.data.pages
+      }
     },
     async updateProfile() {
       this.loading = true;
@@ -669,6 +695,15 @@ export default {
       document.getElementById("profile_banner").value = "";
       this.profile_banner = "";
     },
+    async changePage(value) {
+      this.currentPage = value
+      if(this.selected == 'created') {
+        this.getArticles()
+      }
+      else if(this.selected == 'saved') {
+        this.getSavedArticles()
+      }
+    },
     async editProfile(article, saved) {
       if (this.account.length < 1) {
         document.querySelector(".loginModal").style.display = "block";
@@ -762,7 +797,10 @@ export default {
     }
     await this.twitterLogin();
     await this.getUsers();
-    if (this.twitter) await this.getArticles();
+    if (this.twitter) {
+      await this.getArticles();
+      await this.getSavedArticles()
+    }
     //Initialize section
     if (this.section != undefined) {
       if (

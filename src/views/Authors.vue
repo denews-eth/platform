@@ -58,18 +58,17 @@
 
 	</div>
 	<div class="row row--grid">
-		<AuthorPreview 
-			v-for="author in authors" 
-			:key="author.id" 
-			:author="author" 
-			:followed="(Object.keys(user).length > 1) ? (user.screen_name != author.screen_name) ? (user.followed_authors.indexOf(author.screen_name) != -1 && user.followed_authors[user.followed_authors.indexOf(author.screen_name)] != null) ? true : false : 'invalid' : false" 
-			v-on:follow="follow(author.screen_name)"
-			v-on:unfollow="unfollow(author.screen_name)"
-			></AuthorPreview>
+		<AuthorPreview v-for="author in authors" :key="author.id" :author="author"
+			:followed="(Object.keys(user).length > 1) ? (user.screen_name != author.screen_name) ? (user.followed_authors.indexOf(author.screen_name) != -1 && user.followed_authors[user.followed_authors.indexOf(author.screen_name)] != null) ? true : false : 'invalid' : false"
+			v-on:follow="follow(author.screen_name)" v-on:unfollow="unfollow(author.screen_name)"></AuthorPreview>
+		<div class="col-12" v-if="authors.length == 0"
+			style="text-align:center; margin-top:60px;color:#b1b1b1;font-weight:400">
+			<h3>There are no authors in this page</h3>
+		</div>
 	</div>
 
 
-	<Paginator></Paginator>
+	<Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
 </div>
 </template>
 
@@ -94,13 +93,19 @@ export default {
 			twitter: false,
 			account: '',
 			oauth_token: '',
-			user: {}
+			user: {},
+			currentPage: 1,
+			pages:0
 		}
 	},
 	methods: {
 		async getAuthors() {
-			let res = await axios.get('/users')
-			this.authors = res.data
+			let res = await axios.get('/users/'+this.currentPage)
+			if(res.data.error != true) {
+				this.currentPage = res.data.current
+				this.pages = res.data.pages
+				this.authors = res.data.users
+			}
 		},
 		async twitterLogin() {
       if(localStorage.getItem('oauth_token') === null) {
@@ -168,6 +173,10 @@ export default {
         setTimeout(() => document.querySelector('.loginModal').style.display = 'none', 2500)
 			}
 			return
+		},
+		async changePage(value) {
+			this.currentPage = value
+			this.getAuthors()
 		}
 	},
 	async mounted() {

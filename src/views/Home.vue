@@ -40,13 +40,16 @@
         <div class="col-12 col-sm-6 col-lg-4 col-xl-3" v-for="article in articles" :key="article.hash">
           <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''" v-on:article_saved="editProfile(article.hash, (user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
         </div>
+        <div class="col-12" v-if="articles.length == 0" style="text-align:center; margin-top:60px;color:#b1b1b1;font-weight:400">
+          <h3>There are no articles in this page</h3>
+        </div>
 
         <div class="col-12">
           <!-- tabs content -->
           <div class="tab-content">
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
               <div class="row row--grid">
-                <Paginator v-if="articles.length > 3"></Paginator>
+                <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
               </div>
             </div>
           </div>
@@ -80,14 +83,20 @@ export default {
       oauth_token: '',
       twitter: false,
       users: [],
-      account: ''
+      account: '',
+      currentPage: 1,
+      pages: 0
     }
   },
   methods: {
     async getArticles() {
-      let res = await axios.get('/articles')
+      let res = await axios.get('/articles/'+this.currentPage)
       if(res.data.error == true) {return}
-      else this.articles = res.data
+      else {
+        this.articles = res.data.articles
+        this.currentPage = res.data.current
+        this.pages = res.data.pages
+      }
     },
     async twitterLogin() {
       if(localStorage.getItem('oauth_token') === null) {
@@ -153,6 +162,10 @@ export default {
       let res = await axios.get('/users') 
       this.users = res.data
     },
+    async changePage(value) {
+      this.currentPage = value
+      this.getArticles()
+    }
   },
   async mounted() {
     if (localStorage.getItem("connected") !== null) {

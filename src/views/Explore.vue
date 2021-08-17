@@ -24,13 +24,16 @@
         <div class="col-12 col-sm-6 col-lg-4" v-for="article in articles" :key="article._id">
           <ArticlePreview :article="article" :author_image="(search(article.author, users) != undefined) ? search(article.author, users).profile_image_url : ''" v-on:article_saved="editProfile(article.hash, (user.articles_saved !== undefined && user.articles_saved.indexOf(article.hash)!=-1))" :saved="(user.articles_saved !== undefined && user.articles_saved.indexOf(article.hash)!=-1) ? true : false"></ArticlePreview>
         </div>
+        <div class="col-12" v-if="articles.length == 0" style="text-align:center; margin-top:50px;color:#b1b1b1;font-weight:400">
+          <h4>There are no articles in this page</h4>
+        </div>
 
         <div class="col-12">
           <!-- tabs content -->
           <div class="tab-content">
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
               <div class="row row--grid">
-                <Paginator></Paginator>
+                <Paginator v-on:changePage="changePage" :currentPage="currentPage" :pages="pages"></Paginator>
               </div>
             </div>
           </div>
@@ -70,7 +73,9 @@ export default {
       twitter: false,
       articles: [],
       users: [],
-      categories: []
+      categories: [],
+      currentPage: (localStorage.getItem('page') === null) ? 1 : localStorage.getItem('page'),
+      pages: 0
     }
   },
   methods: {
@@ -86,10 +91,12 @@ export default {
       }
     },
     async getArticles() {
-      let res = await axios.get('/articles')
+      let res = await axios.get('/articles/'+this.currentPage)
       if(res.data.error == true) return
       else {
-        this.articles = res.data
+        this.articles = res.data.articles
+        this.pages = res.data.pages
+        this.currentPage = res.data.current
       }
     },
     async editProfile(hash, saved) {
@@ -146,6 +153,9 @@ export default {
       this.users = res.data
     },
     pushCategory(value) {
+      if(this.categories.length == 0) {
+        this.currentPage = 1
+      }
       this.categories.push(value)
     },
     removeCategory(value) {
@@ -159,13 +169,27 @@ export default {
           i++
         }
       })
+      if(this.categories.length == 0) {
+        this.getArticles()
+      }
     },
     async updateSearch() {
-      let res = await axios.post('/articles/search', {
+      let res = await axios.post('/articles/search/'+this.currentPage, {
         categories: this.categories
       })
       if(res.data.error != true) {
-        this.articles = res.data
+        this.articles = res.data.articles
+        this.currentPage = res.data.current
+        this.pages = res.data.pages
+      }
+    },
+    async changePage(value) {
+      this.currentPage = value
+      if(this.categories.length > 0) {
+        this.updateSearch()
+      }
+      else {
+        this.getArticles()
       }
     }
   },
