@@ -1,4 +1,7 @@
-$(document).ready(function () {
+let executed = false
+setInterval(function () {
+
+if(location.href.split('//')[1].split('/')[1].length == 0 && !executed) {
 	"use strict"; // start of use strict
 
 	/*==============================
@@ -385,5 +388,16 @@ $(document).ready(function () {
 			continuousScrolling: false,
 		});
 	}
-
-});
+	console.log("home")
+	executed = true
+}
+else {
+	if(location.href.split('//')[1].split('/')[1].length == 0) {
+		executed = true
+	}
+	else {
+		executed = false
+	}
+	
+}
+}, 500);
