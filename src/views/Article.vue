@@ -37,7 +37,7 @@ export default {
   props: ['hash'],
   methods: {
     async getArticles() {
-      let res = await axios.get('/articles/'+this.hash)
+      let res = await axios.get('/article/'+this.hash)
       this.article = res.data
     }
   },

@@ -7,7 +7,7 @@
 
         <div class="article__meta">
           <div>
-            <a href="#" class="article__category mr-3" v-for="tag in JSON.parse(article.tag).split(',')" :key="tag">{{tag}}</a>
+            <a href="#" class="article__category mr-3" v-for="el in article.tag" :key="el">{{el}}</a>
           </div>
           <span class="article__date"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path
